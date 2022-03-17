@@ -18,13 +18,13 @@ public class Meal {
   private String meal;
 
   @ManyToMany
-  @JoinTable(name = "meal_order",
+  @JoinTable(name = "rt_meal_order",
       joinColumns = @JoinColumn(name = "meal_id"),
       inverseJoinColumns = @JoinColumn(name = "order_id"))
   private Set<ClientOrder> order;
 
   @ManyToMany
-  @JoinTable(name = "meal_menu",
+  @JoinTable(name = "rt_meal_menu",
       joinColumns = @JoinColumn(name = "meal_id"),
       inverseJoinColumns = @JoinColumn(name = "menu_id"))
   private Set<Menu> menu;

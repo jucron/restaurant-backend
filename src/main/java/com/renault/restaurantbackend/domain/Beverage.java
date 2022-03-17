@@ -17,13 +17,13 @@ public class Beverage {
   private String beverage;
 
   @ManyToMany
-  @JoinTable(name = "beverage_order",
+  @JoinTable(name = "rt_beverage_order",
       joinColumns = @JoinColumn(name = "beverage_id"),
       inverseJoinColumns = @JoinColumn(name = "order_id"))
   private Set<ClientOrder> order;
 
   @ManyToMany
-  @JoinTable(name = "beverage_menu",
+  @JoinTable(name = "rt_beverage_menu",
       joinColumns = @JoinColumn(name = "beverage_id"),
       inverseJoinColumns = @JoinColumn(name = "menu_id"))
   private Set<Menu> menu;

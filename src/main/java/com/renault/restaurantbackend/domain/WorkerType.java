@@ -1,9 +1,9 @@
-package main.java.com.renault.restaurantbackend.domain;
+package com.renault.restaurantbackend.domain;
 
 public enum WorkerType {
-  waiter,
-  cook,
-  cleaning,
-  assistant,
-  administrator
+  WAITER,
+  COOK,
+  CLEANING,
+  ASSISTANT,
+  ADMINISTRATOR
 }

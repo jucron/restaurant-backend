@@ -1,8 +1,9 @@
-package main.java.com.renault.restaurantbackend.domain;
+package com.renault.restaurantbackend.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import lombok.Data;
 
@@ -15,8 +16,11 @@ public class Client {
   private String name;
 
   @OneToOne
-  private Order order;
+  @JoinColumn(name = "order_id")
+  private ClientOrder order;
+
   @OneToOne
+  @JoinColumn(name = "client_table_id")
   private ClientTable clientTable;
 
 }

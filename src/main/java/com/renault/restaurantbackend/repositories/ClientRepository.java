@@ -1,6 +1,6 @@
-package main.java.com.renault.restaurantbackend.repositories;
+package com.renault.restaurantbackend.repositories;
 
-import main.java.com.renault.restaurantbackend.domain.Client;
+import com.renault.restaurantbackend.domain.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {

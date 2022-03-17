@@ -1,8 +1,11 @@
-package main.java.com.renault.restaurantbackend.domain;
+package com.renault.restaurantbackend.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.Data;
 
@@ -13,7 +16,11 @@ public class ClientTable {
   private Long id;
 
   private int number;
+
+  @Enumerated(EnumType.STRING)
   private Status status;
+
   @ManyToOne
+  @JoinColumn(name = "waiter_id")
   private Waiter waiter;
 }

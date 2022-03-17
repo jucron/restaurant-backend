@@ -1,8 +1,12 @@
-package main.java.com.renault.restaurantbackend.domain;
+package com.renault.restaurantbackend.domain;
 
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import lombok.Data;
 
@@ -12,8 +16,16 @@ public class Meal {
   @Id @Column(name = "id", nullable = false) private Long id;
 
   private String meal;
-  @ManyToOne
-  private Order order;
-  @ManyToOne
-  private Menu menu;
+
+  @ManyToMany
+  @JoinTable(name = "meal_order",
+      joinColumns = @JoinColumn(name = "meal_id"),
+      inverseJoinColumns = @JoinColumn(name = "order_id"))
+  private Set<ClientOrder> order;
+
+  @ManyToMany
+  @JoinTable(name = "meal_menu",
+      joinColumns = @JoinColumn(name = "meal_id"),
+      inverseJoinColumns = @JoinColumn(name = "menu_id"))
+  private Set<Menu> menu;
 }

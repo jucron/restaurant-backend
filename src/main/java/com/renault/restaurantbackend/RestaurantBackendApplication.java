@@ -1,4 +1,4 @@
-package main.java.com.renault.restaurantbackend;
+package com.renault.restaurantbackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

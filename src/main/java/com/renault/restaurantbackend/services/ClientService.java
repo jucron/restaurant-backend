@@ -7,4 +7,6 @@ import java.util.Set;
 
 public interface ClientService {
   ClientListDTO getAllClients();
+
+  ClientDTO createClient(String name);
 }

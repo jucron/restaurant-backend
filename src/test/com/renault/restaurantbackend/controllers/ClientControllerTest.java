@@ -21,9 +21,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -54,7 +57,7 @@ class ClientControllerTest {
   }
 
   @Test
-  public void getListOfClients() throws Exception {
+  public void getListOfClientsDTO() throws Exception {
     //given
     ClientDTO clientDTO_example_1 = new ClientDTO();
     ClientDTO clientDTO_example_2 = new ClientDTO();
@@ -62,10 +65,25 @@ class ClientControllerTest {
     given(clientService.getAllClients()).willReturn(new ClientListDTO(clients));
 
     //when and then
-    mockMvc.perform(get(BASE_URL + "/get")
+    mockMvc.perform(get(BASE_URL + "/")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.clients", hasSize(2)));
   }
+  @Test
+  public void createANewClientAndReturnsDTO() throws Exception {
+    //given
+    String clientExampleName = "clientExampleName";
+    ClientDTO clientDTO = new ClientDTO(); clientDTO.setName(clientExampleName);
+
+    given(clientService.createClient(clientExampleName)).willReturn(clientDTO);
+    //when and then
+    mockMvc.perform(post(BASE_URL + "/"+clientExampleName)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.name", equalTo(clientExampleName)));
+  }
+
 }

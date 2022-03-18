@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -31,6 +33,9 @@ class ClientServiceImplTest {
   @Mock
   ClientRepository clientRepository;
 
+  @Captor
+  ArgumentCaptor<Client> clientCaptor;
+
   @BeforeEach
   public void setUp() {
     MockitoAnnotations.initMocks(this);
@@ -38,7 +43,7 @@ class ClientServiceImplTest {
   }
 
   @Test
-  void getClientsFromRepoAndReturnA_DTOList() {
+  void getClientsFromRepoAndReturnsDTOList() {
     //given
     Client client_example_1 = new Client();
     Client client_example_2 = new Client();
@@ -52,5 +57,20 @@ class ClientServiceImplTest {
     verify(clientRepository).findAll();
     verify(clientMapper,times(2)).clientToClientDTO(any(Client.class));
     assertEquals(2,clientListDTO.getClients().size());
+  }
+  @Test
+  void createANewClientWithAGivenNameAndReturnsDTO() {
+    //given
+    String clientExampleName = "clientExampleName";
+    given(clientMapper.clientToClientDTO(any(Client.class))).willReturn(new ClientDTO());
+    //when
+    ClientDTO clientDTO = clientService.createClient(clientExampleName);
+    //then
+    verify(clientRepository).save(clientCaptor.capture()); //capture client saved
+    verify(clientMapper).clientToClientDTO(any(Client.class));
+
+    Client capturedClient = clientCaptor.getValue();
+    assertEquals(clientExampleName,capturedClient.getName()); //check name assignment
+    assertNotNull(capturedClient.getCheckInTime()); //check time assignment
   }
 }

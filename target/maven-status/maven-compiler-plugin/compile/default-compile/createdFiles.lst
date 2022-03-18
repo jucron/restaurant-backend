@@ -6,6 +6,7 @@ com\renault\restaurantbackend\api\v1\mapper\ClientMapper.class
 com\renault\restaurantbackend\repositories\ClientRepository.class
 com\renault\restaurantbackend\controllers\ClientController.class
 com\renault\restaurantbackend\domain\ClientTable.class
+com\renault\restaurantbackend\api\v1\model\ClientListDTO.class
 com\renault\restaurantbackend\domain\WorkerType.class
 com\renault\restaurantbackend\repositories\MenuRepository.class
 com\renault\restaurantbackend\domain\Waiter.class
@@ -18,9 +19,11 @@ com\renault\restaurantbackend\config\security\SecurityConfig.class
 com\renault\restaurantbackend\repositories\WaiterRepository.class
 com\renault\restaurantbackend\repositories\ClientTableRepository.class
 com\renault\restaurantbackend\repositories\LoginStaffRepository.class
+com\renault\restaurantbackend\services\ClientServiceImpl.class
 com\renault\restaurantbackend\config\security\DisableSecurity.class
 com\renault\restaurantbackend\domain\LoginStaff.class
 com\renault\restaurantbackend\api\v1\model\ClientDTO.class
 com\renault\restaurantbackend\domain\Client.class
+com\renault\restaurantbackend\services\ClientService.class
 com\renault\restaurantbackend\repositories\CookRepository.class
 com\renault\restaurantbackend\domain\Beverage.class

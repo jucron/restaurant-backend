@@ -5,6 +5,7 @@ import com.renault.restaurantbackend.api.v1.model.ClientDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
 import com.renault.restaurantbackend.domain.Client;
 import com.renault.restaurantbackend.repositories.ClientRepository;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,5 +26,12 @@ public class ClientServiceImpl implements ClientService {
       clientListDTO.getClients().add(clientMapper.clientToClientDTO(client));
     }
     return clientListDTO;
+  }
+
+  @Override public ClientDTO createClient(String name) {
+    Client newClient = new Client();
+    newClient.setName(name); newClient.setCheckInTime(LocalDateTime.now());
+    clientRepository.save(newClient);
+    return clientMapper.clientToClientDTO(newClient);
   }
 }

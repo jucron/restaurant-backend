@@ -4,7 +4,9 @@ C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaur
 C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\repositories\MealRepository.java
 C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\domain\Client.java
 C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\config\security\SecurityConfig.java
+C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\services\ClientServiceImpl.java
 C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\domain\ClientOrder.java
+C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\services\ClientService.java
 C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\api\v1\mapper\ClientMapper.java
 C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\domain\ClientTable.java
 C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\controllers\ClientController.java
@@ -17,6 +19,7 @@ C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaur
 C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\repositories\MenuRepository.java
 C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\domain\Beverage.java
 C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\repositories\CookRepository.java
+C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\api\v1\model\ClientListDTO.java
 C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\api\v1\model\ClientDTO.java
 C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\domain\Meal.java
 C:\Users\jucro\IdeaProjects\restaurant-backend\src\main\java\com\renault\restaurantbackend\config\security\filters\CustomAuthenticationFilter.java

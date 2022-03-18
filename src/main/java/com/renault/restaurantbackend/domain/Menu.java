@@ -1,6 +1,7 @@
 package com.renault.restaurantbackend.domain;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,6 +15,6 @@ public class Menu {
   @Id @Column(name = "id", nullable = false) private Long id;
 
   private String name;
-  private Date lastUpdated;
+  private LocalDateTime lastUpdated;
 
 }

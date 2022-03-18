@@ -1,10 +1,22 @@
 package com.renault.restaurantbackend.controllers;
 
+import com.renault.restaurantbackend.api.v1.model.ClientDTO;
+import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
 import com.renault.restaurantbackend.controllers.ClientController;
+import com.renault.restaurantbackend.services.ClientService;
+import com.renault.restaurantbackend.services.ClientServiceImpl;
 import java.util.Arrays;
+import java.util.List;
+import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.mockito.quality.Strictness;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -17,16 +29,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 class ClientControllerTest {
-
-  String BASE_URL = ClientController.BASE_URL;
+  /*Expected behavior of this class:
+  1-Fetch list of ClientDTO's (by waiter) - OK
+  2-todo: Create a new Client (check-in of client, by waiter)
+  3-todo: Close account (check-out of client, by waiter) //todo
+  4-todo: Check bill (by client)
+   */
 
   @InjectMocks
   ClientController clientController;
 
+  @Mock
+  ClientService clientService;
+
   MockMvc mockMvc;
+
+  String BASE_URL = ClientController.BASE_URL;
 
   @BeforeEach
   public void setUp() {
+    MockitoAnnotations.initMocks(this);
     mockMvc = MockMvcBuilders.standaloneSetup(clientController)
         .build();
   }
@@ -34,23 +56,16 @@ class ClientControllerTest {
   @Test
   public void getListOfClients() throws Exception {
     //given
-    /*
     ClientDTO clientDTO_example_1 = new ClientDTO();
     ClientDTO clientDTO_example_2 = new ClientDTO();
-
     List<ClientDTO> clients = Arrays.asList(clientDTO_example_1, clientDTO_example_2);
-    //when
-    given(clientService.getAllClients()).willReturn(clients);
-    //then
-    mockMvc.perform(get(BASE_URL + "/")
+    given(clientService.getAllClients()).willReturn(new ClientListDTO(clients));
+
+    //when and then
+    mockMvc.perform(get(BASE_URL + "/get")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.clients", hasSize(2)));
-
-     */
-    fail(); //todo: implement this test after Mapper classes
   }
-
-
 }

@@ -15,6 +15,7 @@ public class Beverage {
   @Id @Column(name = "id", nullable = false) private Long id;
 
   private String beverage;
+  private double value;
 
   @ManyToMany
   @JoinTable(name = "rt_beverage_order",

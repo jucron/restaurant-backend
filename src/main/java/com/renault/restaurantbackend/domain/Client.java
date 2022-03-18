@@ -1,5 +1,7 @@
 package com.renault.restaurantbackend.domain;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,6 +16,8 @@ public class Client {
   private Long id;
 
   private String name;
+  private LocalDateTime checkInTime;
+  private LocalDateTime checkOutTime;
 
   @OneToOne
   @JoinColumn(name = "order_id")

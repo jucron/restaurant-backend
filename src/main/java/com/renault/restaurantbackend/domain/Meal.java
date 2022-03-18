@@ -16,6 +16,7 @@ public class Meal {
   @Id @Column(name = "id", nullable = false) private Long id;
 
   private String meal;
+  private double value;
 
   @ManyToMany
   @JoinTable(name = "rt_meal_order",

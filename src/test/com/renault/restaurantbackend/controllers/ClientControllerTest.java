@@ -33,8 +33,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 class ClientControllerTest {
   /*Expected behavior of this class:
-  1-Fetch list of ClientDTO's (by waiter) - OK
-  2-todo: Create a new Client (check-in of client, by waiter)
+  1-OK: Fetch list of ClientDTO's (by waiter)
+  2-OK: Create a new Client (check-in of client, by waiter)
   3-todo: Close account (check-out of client, by waiter) //todo
   4-todo: Check bill (by client)
    */
@@ -84,6 +84,16 @@ class ClientControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name", equalTo(clientExampleName)));
+  }
+  @Test
+  public void checkoutAClientByGivingClientsTableAndName() {
+    //given
+    String clientExampleName = "clientExampleName";
+    int tableNumber = 1;
+    ClientDTO clientDTO = new ClientDTO(); clientDTO.setName(clientExampleName);
+    //todo: implement this!
+    given(clientService.checkoutClient(clientExampleName, tableNumber)).willReturn(clientDTO);
+
   }
 
 }

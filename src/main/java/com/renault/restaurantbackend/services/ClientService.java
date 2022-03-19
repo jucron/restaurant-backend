@@ -9,4 +9,6 @@ public interface ClientService {
   ClientListDTO getAllClients();
 
   ClientDTO createClient(String name);
+
+  ClientDTO checkoutClient(String clientExampleName, int tableNumber);
 }

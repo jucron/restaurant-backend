@@ -1,8 +1,10 @@
 package com.renault.restaurantbackend.controllers;
 
+import com.renault.restaurantbackend.api.v1.mapper.AbstractRestControllerTest;
 import com.renault.restaurantbackend.api.v1.model.ClientDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
 import com.renault.restaurantbackend.controllers.ClientController;
+import com.renault.restaurantbackend.controllers.forms.ClientNameAndTableNumberForm;
 import com.renault.restaurantbackend.services.ClientService;
 import com.renault.restaurantbackend.services.ClientServiceImpl;
 import java.util.Arrays;
@@ -24,18 +26,19 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-class ClientControllerTest {
+class ClientControllerTest extends AbstractRestControllerTest {
   /*Expected behavior of this class:
   1-OK: Fetch list of ClientDTO's (by waiter)
   2-OK: Create a new Client (check-in of client, by waiter)
-  3-todo: Close account (check-out of client, by waiter) //todo
+  3-OK: Close account (check-out of client, by waiter) //todo
   4-todo: Check bill (by client)
    */
 
@@ -48,6 +51,8 @@ class ClientControllerTest {
   MockMvc mockMvc;
 
   String BASE_URL = ClientController.BASE_URL;
+
+  private final String CLIENT_EXAMPLE_NAME = "clientExampleName";
 
   @BeforeEach
   public void setUp() {
@@ -74,26 +79,36 @@ class ClientControllerTest {
   @Test
   public void createANewClientAndReturnsDTO() throws Exception {
     //given
-    String clientExampleName = "clientExampleName";
+    String clientExampleName = CLIENT_EXAMPLE_NAME;
     ClientDTO clientDTO = new ClientDTO(); clientDTO.setName(clientExampleName);
 
     given(clientService.createClient(clientExampleName)).willReturn(clientDTO);
     //when and then
-    mockMvc.perform(post(BASE_URL + "/"+clientExampleName)
+    mockMvc.perform(post(BASE_URL + "/create/"+clientExampleName)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
+        .andExpect(status().isCreated())
         .andExpect(jsonPath("$.name", equalTo(clientExampleName)));
   }
   @Test
-  public void checkoutAClientByGivingClientsTableAndName() {
+  public void checkoutAClientByGivingClientsTableAndName() throws Exception {
     //given
-    String clientExampleName = "clientExampleName";
+    String clientExampleName = CLIENT_EXAMPLE_NAME;
     int tableNumber = 1;
+    ClientNameAndTableNumberForm form = new ClientNameAndTableNumberForm(
+        clientExampleName,tableNumber);
+
     ClientDTO clientDTO = new ClientDTO(); clientDTO.setName(clientExampleName);
-    //todo: implement this!
+
     given(clientService.checkoutClient(clientExampleName, tableNumber)).willReturn(clientDTO);
 
+    //when and then
+    mockMvc.perform(put(BASE_URL + "/checkout")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(form)))
+                .andExpect(status().isOk())
+        .andExpect(jsonPath("$.name", equalTo(CLIENT_EXAMPLE_NAME)));
   }
 
 }

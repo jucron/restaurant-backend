@@ -3,14 +3,24 @@ package com.renault.restaurantbackend.controllers;
 import com.renault.restaurantbackend.api.v1.mapper.AbstractRestControllerTest;
 import com.renault.restaurantbackend.api.v1.model.ClientDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
+import com.renault.restaurantbackend.api.v1.model.ConsumptionListDTO;
 import com.renault.restaurantbackend.controllers.ClientController;
 import com.renault.restaurantbackend.controllers.forms.ClientNameAndTableNumberForm;
+import com.renault.restaurantbackend.domain.Beverage;
+import com.renault.restaurantbackend.domain.Client;
+import com.renault.restaurantbackend.domain.ClientOrder;
+import com.renault.restaurantbackend.domain.Meal;
+import com.renault.restaurantbackend.domain.Status;
 import com.renault.restaurantbackend.services.ClientService;
 import com.renault.restaurantbackend.services.ClientServiceImpl;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -38,7 +48,7 @@ class ClientControllerTest extends AbstractRestControllerTest {
   /*Expected behavior of this class:
   1-OK: Fetch list of ClientDTO's (by waiter)
   2-OK: Create a new Client (check-in of client, by waiter)
-  3-OK: Close account (check-out of client, by waiter) //todo
+  3-OK: Close account (check-out of client, by waiter)
   4-todo: Check bill (by client)
    */
 
@@ -53,16 +63,18 @@ class ClientControllerTest extends AbstractRestControllerTest {
   String BASE_URL = ClientController.BASE_URL;
 
   private final String CLIENT_EXAMPLE_NAME = "clientExampleName";
+  private final String MEAL_EXAMPLE = "mealExample";
+  private final String BEVERAGE_EXAMPLE = "beverageExample";
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     MockitoAnnotations.initMocks(this);
     mockMvc = MockMvcBuilders.standaloneSetup(clientController)
         .build();
   }
 
   @Test
-  public void getListOfClientsDTO() throws Exception {
+  void getListOfClientsDTO() throws Exception {
     //given
     ClientDTO clientDTO_example_1 = new ClientDTO();
     ClientDTO clientDTO_example_2 = new ClientDTO();
@@ -77,9 +89,10 @@ class ClientControllerTest extends AbstractRestControllerTest {
         .andExpect(jsonPath("$.clients", hasSize(2)));
   }
   @Test
-  public void createANewClientAndReturnsDTO() throws Exception {
-    //given
+  void createANewClientAndReturnsDTOWithOrderAndTable() throws Exception {
+    //given //todo: MUST HAVE A NEW TABLE AND ORDER
     String clientExampleName = CLIENT_EXAMPLE_NAME;
+    int tableNumber = 1;
     ClientDTO clientDTO = new ClientDTO(); clientDTO.setName(clientExampleName);
 
     given(clientService.createClient(clientExampleName)).willReturn(clientDTO);
@@ -91,7 +104,7 @@ class ClientControllerTest extends AbstractRestControllerTest {
         .andExpect(jsonPath("$.name", equalTo(clientExampleName)));
   }
   @Test
-  public void checkoutAClientByGivingClientsTableAndName() throws Exception {
+  void checkoutAClientByGivingClientsTableAndName() throws Exception {
     //given
     String clientExampleName = CLIENT_EXAMPLE_NAME;
     int tableNumber = 1;
@@ -110,5 +123,33 @@ class ClientControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isOk())
         .andExpect(jsonPath("$.name", equalTo(CLIENT_EXAMPLE_NAME)));
   }
+  @Test
+  void billViewByActiveTableAndClientAndOrder_returnsListOfConsumption() throws Exception {
+    //given
+    double meal_value = 10.05; double beverage_value = 5.45;
+    Meal meal1 = new Meal();meal1.setMeal(MEAL_EXAMPLE); meal1.setValue(meal_value);
+    Beverage beverage1 = new Beverage(); beverage1.setBeverage(BEVERAGE_EXAMPLE); beverage1.setValue(beverage_value);
+    ClientOrder order1 = new ClientOrder(); order1.setStatus(Status.OPEN);
+    meal1.setOrder(new HashSet<>(Set.of(order1))); beverage1.setOrder((new HashSet<>(Set.of(order1))));
+    Client client = new Client(); client.setOrder(order1); client.setName(CLIENT_EXAMPLE_NAME);
 
+    ClientNameAndTableNumberForm form = new ClientNameAndTableNumberForm(
+        CLIENT_EXAMPLE_NAME,1);
+
+    given(clientService.getListOfConsumption(CLIENT_EXAMPLE_NAME, 1))
+        .willReturn(new ConsumptionListDTO(client,new ArrayList<>(List.of(meal1)),
+            new ArrayList<>(List.of(beverage1)), meal_value+beverage_value));
+
+    //when and then
+    mockMvc.perform(get(BASE_URL + "/consumption")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(form)))
+                .andExpect(status().isOk())
+        .andExpect(jsonPath("$.client.name", equalTo(CLIENT_EXAMPLE_NAME)))
+        .andExpect(jsonPath("$.client.order.status", equalTo(Status.OPEN.toString())))
+        .andExpect(jsonPath("$.meals[0].meal", equalTo(MEAL_EXAMPLE)))
+        .andExpect(jsonPath("$.beverages[0].beverage", equalTo(BEVERAGE_EXAMPLE)))
+        .andExpect(jsonPath("$.totalCost", equalTo(meal_value+beverage_value)));
+  }
 }

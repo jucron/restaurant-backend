@@ -34,8 +34,6 @@ class ClientServiceIT {
 Testing repository fetch methods
  */
   @Autowired
-  private ClientService clientService;
-  @Autowired
   private ClientRepository clientRepository;
   @Autowired
   private ClientTableRepository clientTableRepository;
@@ -93,46 +91,30 @@ Testing repository fetch methods
     //given
     //(data given at setUp)
     //when
-    ClientListDTO clientListDTO = clientService.getAllClients();
+    List<Client> clientList = clientRepository.findAll();
     //then
-    assertEquals(2,clientListDTO.getClients().size());
-  }
-
-  @Test
-  @Transactional
-  void createANewClient() {
-    //given
-    String clientExampleName = "clientExampleName";
-
-    //when
-    ClientDTO clientDTO = clientService.createClient(clientExampleName);
-    //then
-    assertEquals(clientExampleName,clientDTO.getName()); //check name assignment
-    assertNotNull(clientDTO.getCheckInTime()); //check time assignment
-    assertNotNull(clientDTO.getId()); //check ID assignment by saving method
+    assertEquals(2,clientList.size());
   }
   @Test
   void findTableByTableNumber() {
     //given
-    int tableNumber = CLIENT_TABLE_NUMBER_1;
     //when
-    ClientTable clientTable = clientTableRepository.findByNumber(tableNumber);
+    ClientTable clientTable = clientTableRepository.findByNumber(CLIENT_TABLE_NUMBER_1);
     //then
     assertNotNull(clientTable.getId());
-    assertEquals(tableNumber,clientTable.getNumber());
+    assertEquals(CLIENT_TABLE_NUMBER_1,clientTable.getNumber());
   }
   @Test
   void findClientByNameAndClientTableAndCheckOutTimeNull() {
     //given
-    String clientExampleName = CLIENT_NAME_1;
-    int tableNumber = CLIENT_TABLE_NUMBER_1;
-    ClientTable clientTable = clientTableRepository.findByNumber(tableNumber);
+    ClientTable clientTable = clientTableRepository.findByNumber(CLIENT_TABLE_NUMBER_1);
     //when
     Client clientFetched = clientRepository.findByNameAndClientTableAndCheckOutTime(
-        clientExampleName,clientTable,null);
+        CLIENT_NAME_1,clientTable,null);
     //then
     assertNotNull(clientFetched.getId());
-    System.out.println(clientFetched);
+    assertEquals(CLIENT_NAME_1,clientFetched.getName());
+    assertEquals(CLIENT_TABLE_NUMBER_1,clientTable.getNumber());
   }
   @Test
   void findAllMealsByOrderId() {

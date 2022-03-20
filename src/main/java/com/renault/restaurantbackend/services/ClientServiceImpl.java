@@ -14,9 +14,9 @@ import com.renault.restaurantbackend.repositories.BeverageRepository;
 import com.renault.restaurantbackend.repositories.ClientRepository;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
 import com.renault.restaurantbackend.repositories.MealRepository;
+import com.renault.restaurantbackend.repositories.OrderRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +29,7 @@ public class ClientServiceImpl implements ClientService {
   private final ClientTableRepository clientTableRepository;
   private final MealRepository mealRepository;
   private final BeverageRepository beverageRepository;
+  private final OrderRepository orderRepository;
 
   @Override
   public ClientListDTO getAllClients() {
@@ -40,9 +41,15 @@ public class ClientServiceImpl implements ClientService {
     return clientListDTO;
   }
 
-  @Override public ClientDTO createClient(String name) {
+  @Override
+  public ClientDTO createClient(String name, int tableNumber) {
     Client newClient = new Client();
     newClient.setName(name); newClient.setCheckInTime(LocalDateTime.now());
+    ClientTable newClientTable = new ClientTable(); newClientTable.setNumber(tableNumber);
+    ClientOrder newOrder = new ClientOrder(); newOrder.setStatus(Status.OPEN);
+
+    clientTableRepository.save(newClientTable); orderRepository.save(newOrder);
+    newClient.setClientTable(newClientTable); newClient.setOrder(newOrder);
     clientRepository.save(newClient);
     return clientMapper.clientToClientDTO(newClient);
   }

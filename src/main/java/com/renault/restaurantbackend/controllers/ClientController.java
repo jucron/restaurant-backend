@@ -28,10 +28,10 @@ public class ClientController {
   public ClientListDTO getClients() {
     return clientService.getAllClients();
   }
-  @PostMapping({"/create/{name}"})
+  @PostMapping({"/create/{name}/{tableNumber}"})
   @ResponseStatus(HttpStatus.CREATED)
-  public ClientDTO createClients(@PathVariable String name) {
-    return clientService.createClient(name);
+  public ClientDTO createClients(@PathVariable String name, @PathVariable int tableNumber) {
+    return clientService.createClient(name, tableNumber);
   }
   @PutMapping({"/checkout"})
   @ResponseStatus(HttpStatus.OK)

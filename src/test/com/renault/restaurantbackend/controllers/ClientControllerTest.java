@@ -4,31 +4,24 @@ import com.renault.restaurantbackend.api.v1.mapper.AbstractRestControllerTest;
 import com.renault.restaurantbackend.api.v1.model.ClientDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
 import com.renault.restaurantbackend.api.v1.model.ConsumptionListDTO;
-import com.renault.restaurantbackend.controllers.ClientController;
 import com.renault.restaurantbackend.controllers.forms.ClientNameAndTableNumberForm;
 import com.renault.restaurantbackend.domain.Beverage;
 import com.renault.restaurantbackend.domain.Client;
 import com.renault.restaurantbackend.domain.ClientOrder;
+import com.renault.restaurantbackend.domain.ClientTable;
 import com.renault.restaurantbackend.domain.Meal;
 import com.renault.restaurantbackend.domain.Status;
 import com.renault.restaurantbackend.services.ClientService;
-import com.renault.restaurantbackend.services.ClientServiceImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-import org.mockito.quality.Strictness;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -90,18 +83,23 @@ class ClientControllerTest extends AbstractRestControllerTest {
   }
   @Test
   void createANewClientAndReturnsDTOWithOrderAndTable() throws Exception {
-    //given //todo: MUST HAVE A NEW TABLE AND ORDER
+    //given
     String clientExampleName = CLIENT_EXAMPLE_NAME;
     int tableNumber = 1;
-    ClientDTO clientDTO = new ClientDTO(); clientDTO.setName(clientExampleName);
+    ClientDTO clientDTO = new ClientDTO();
+    ClientTable clientTable = new ClientTable(); clientTable.setNumber(tableNumber);
+    clientDTO.setName(clientExampleName); clientDTO.setClientTable(clientTable);
+    clientDTO.setOrder(new ClientOrder());
 
-    given(clientService.createClient(clientExampleName)).willReturn(clientDTO);
+    given(clientService.createClient(clientExampleName, tableNumber)).willReturn(clientDTO);
     //when and then
-    mockMvc.perform(post(BASE_URL + "/create/"+clientExampleName)
+    mockMvc.perform(post(BASE_URL + "/create/"+clientExampleName+"/"+tableNumber)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.name", equalTo(clientExampleName)));
+        .andExpect(jsonPath("$.name", equalTo(clientExampleName)))
+        .andExpect(jsonPath("$.clientTable.number", equalTo(tableNumber)))
+        .andExpect(jsonPath("$.order", notNullValue()));
   }
   @Test
   void checkoutAClientByGivingClientsTableAndName() throws Exception {

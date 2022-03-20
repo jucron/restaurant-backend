@@ -14,6 +14,7 @@ import com.renault.restaurantbackend.repositories.BeverageRepository;
 import com.renault.restaurantbackend.repositories.ClientRepository;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
 import com.renault.restaurantbackend.repositories.MealRepository;
+import com.renault.restaurantbackend.repositories.OrderRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -45,6 +45,8 @@ class ClientServiceImplTest {
   MealRepository mealRepository;
   @Mock
   BeverageRepository beverageRepository;
+  @Mock
+  OrderRepository orderRepository;
   @Captor
   ArgumentCaptor<Client> clientCaptor;
 
@@ -55,7 +57,7 @@ class ClientServiceImplTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     clientService = new ClientServiceImpl(clientMapper,clientRepository, clientTableRepository,
-        mealRepository, beverageRepository);
+        mealRepository, beverageRepository, orderRepository);
   }
 
   @Test
@@ -75,18 +77,22 @@ class ClientServiceImplTest {
     assertEquals(2,clientListDTO.getClients().size());
   }
   @Test
-  void createANewClientWithAGivenNameAndReturnsDTO() {
+  void createANewClientWithAGivenNameAndTableNumber_returnsDTOWithNewOrderAndTable() {
     //given
     given(clientMapper.clientToClientDTO(any(Client.class))).willReturn(new ClientDTO());
     //when
-    ClientDTO clientDTO = clientService.createClient(CLIENT_EXAMPLE_NAME);
+    ClientDTO clientDTO = clientService.createClient(CLIENT_EXAMPLE_NAME, TABLE_NUMBER);
     //then
+    verify(clientMapper).clientToClientDTO(any(Client.class)); //mapping used
+    verify(orderRepository).save(any(ClientOrder.class)); //save new order
+    verify(clientTableRepository).save(any(ClientTable.class)); //save new table
     verify(clientRepository).save(clientCaptor.capture()); //capture client saved
-    verify(clientMapper).clientToClientDTO(any(Client.class));
 
     Client capturedClient = clientCaptor.getValue();
     assertEquals(CLIENT_EXAMPLE_NAME,capturedClient.getName()); //check name assignment
     assertNotNull(capturedClient.getCheckInTime()); //check time assignment
+    assertEquals(TABLE_NUMBER,capturedClient.getClientTable().getNumber()); //tableNumber assigned
+    assertNotNull(capturedClient.getOrder()); //Order assigned
   }
   @Test
   void findANonCheckedOutClientWithNameAndTable_AssignACheckoutValue() {

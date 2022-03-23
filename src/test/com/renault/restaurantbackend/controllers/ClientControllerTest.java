@@ -12,6 +12,8 @@ import com.renault.restaurantbackend.domain.ClientTable;
 import com.renault.restaurantbackend.domain.Meal;
 import com.renault.restaurantbackend.domain.Status;
 import com.renault.restaurantbackend.services.ClientService;
+import com.renault.restaurantbackend.services.ClientServiceImpl;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.internal.matchers.NotNull;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -109,7 +112,11 @@ class ClientControllerTest extends AbstractRestControllerTest {
     ClientNameAndTableNumberForm form = new ClientNameAndTableNumberForm(
         clientExampleName,tableNumber);
 
-    ClientDTO clientDTO = new ClientDTO(); clientDTO.setName(clientExampleName);
+
+    ClientDTO clientDTO = new ClientDTO();clientDTO.setName(clientExampleName);
+    clientDTO.setCheckOutTime(LocalDateTime.now());
+    clientDTO.setClientTable(new ClientTable()); clientDTO.getClientTable().setStatus(Status.CLOSED);
+    clientDTO.setOrder(new ClientOrder()); clientDTO.getOrder().setStatus(Status.CLOSED);
 
     given(clientService.checkoutClient(clientExampleName, tableNumber)).willReturn(clientDTO);
 
@@ -119,7 +126,11 @@ class ClientControllerTest extends AbstractRestControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(asJsonString(form)))
                 .andExpect(status().isOk())
-        .andExpect(jsonPath("$.name", equalTo(CLIENT_EXAMPLE_NAME)));
+        .andExpect(jsonPath("$.name", equalTo(CLIENT_EXAMPLE_NAME)))
+        /** {@link clientService} todo: must implement the following: */
+        .andExpect(jsonPath("$.checkOutTime", notNullValue()))
+        .andExpect(jsonPath("$.order.status", equalTo("CLOSED")))
+        .andExpect(jsonPath("$.clientTable.status", equalTo("CLOSED")));
   }
   @Test
   void billViewByActiveTableAndClientAndOrder_returnsListOfConsumption() throws Exception {

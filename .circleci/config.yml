@@ -21,7 +21,7 @@ jobs:
       MAVEN_OPTS: -Xmx3200m
     env:
       global:
-        - CODECOV_TOKEN=:'487e0890-3f32-4c93-aa48-7613d2c28279'
+        - CODECOV_TOKEN=:'3b1a3fa7-9f06-41a3-a38b-bca1fdd1b535'
 
     steps:
       - checkout

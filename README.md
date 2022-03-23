@@ -1,4 +1,5 @@
-[![CircleCI](https://circleci.com/gh/jucron/spring5-mvc-rest/tree/master.svg?style=svg)](https://circleci.com/gh/jucron/spring5-mvc-rest/tree/master)
+[![CircleCI](https://circleci.com/gh/jucron/restaurant-backend/tree/master.svg?style=svg)](https://circleci.com/gh/jucron/restaurant-backend/tree/master)
+
 [![codecov](https://codecov.io/gh/jucron/spring5-mvc-rest/branch/master/graph/badge.svg?token=SCGLGCHWQ6)](https://codecov.io/gh/jucron/spring5-mvc-rest)
 
 # Restaurant Backend Rest Application

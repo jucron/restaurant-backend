@@ -49,7 +49,7 @@ _todo: gif with login demonstration (work in progress)_
 
 ### Database Diagram
 For the database modeling, a diagram with each table and relationships was created for the SportsBuddy application:
-<img src="https://user-images.githubusercontent.com/79875515/158018955-9ad71cf2-4872-415f-aea6-062185d617cd.png" width=75% height=75%>
+<img src="https://user-images.githubusercontent.com/79875515/159723248-5b927f7b-5ba7-465b-9b60-8484963e5ecf.png" width=75% height=75%>
 
 ## Getting Started
 ### Data Initialization

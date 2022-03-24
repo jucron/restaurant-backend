@@ -46,7 +46,7 @@ class ClientControllerTest extends AbstractRestControllerTest {
   1-OK: Fetch list of ClientDTO's (by waiter)
   2-OK: Create a new Client (check-in of client, by waiter)
   3-OK: Close account (check-out of client, by waiter)
-  4-todo: Check bill (by client)
+  4-OK: Check bill (by client)
    */
 
   @InjectMocks

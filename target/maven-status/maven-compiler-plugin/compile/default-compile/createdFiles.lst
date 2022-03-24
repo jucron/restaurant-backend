@@ -1,6 +1,7 @@
 com\renault\restaurantbackend\RestaurantBackendApplication.class
 com\renault\restaurantbackend\domain\Menu.class
 com\renault\restaurantbackend\domain\Status.class
+com\renault\restaurantbackend\api\v1\model\ClientOrderDTO.class
 com\renault\restaurantbackend\domain\Cook.class
 com\renault\restaurantbackend\api\v1\mapper\ClientMapper.class
 com\renault\restaurantbackend\api\v1\model\ConsumptionListDTO.class
@@ -25,8 +26,11 @@ com\renault\restaurantbackend\api\v1\model\ConsumptionListDTO$ConsumptionListDTO
 com\renault\restaurantbackend\services\ClientServiceImpl.class
 com\renault\restaurantbackend\config\security\DisableSecurity.class
 com\renault\restaurantbackend\domain\LoginStaff.class
+com\renault\restaurantbackend\api\v1\mapper\ClientOrderMapperImpl.class
 com\renault\restaurantbackend\controllers\forms\ClientNameAndTableNumberForm.class
+com\renault\restaurantbackend\api\v1\mapper\ClientOrderMapper.class
 com\renault\restaurantbackend\api\v1\model\ClientDTO.class
+com\renault\restaurantbackend\controllers\OrderController.class
 com\renault\restaurantbackend\domain\Client.class
 com\renault\restaurantbackend\services\ClientService.class
 com\renault\restaurantbackend\repositories\CookRepository.class

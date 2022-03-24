@@ -1,6 +1,7 @@
 package com.renault.restaurantbackend.domain;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -20,7 +21,7 @@ public class ClientOrder {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private Date lastUpdated;
+  private LocalDateTime lastUpdated;
 
   @Enumerated(EnumType.STRING)
   private Status status;

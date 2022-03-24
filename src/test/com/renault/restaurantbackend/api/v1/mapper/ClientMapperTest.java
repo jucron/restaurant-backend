@@ -12,7 +12,7 @@ class ClientMapperTest {
   private final long clientExampleId = 1L;
   private final String clientExampleName = "clientExampleName";
   private final LocalDateTime checkInTime = LocalDateTime.now();
-  ClientMapper clientMapper = ClientMapper.INSTANCE;
+  com.renault.restaurantbackend.api.v1.mapper.ClientMapper clientMapper = com.renault.restaurantbackend.api.v1.mapper.ClientMapper.INSTANCE;
 
   @Test
   void convertClientToClientDTO() {

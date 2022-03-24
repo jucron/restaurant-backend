@@ -1,6 +1,6 @@
 [![CircleCI](https://circleci.com/gh/jucron/restaurant-backend/tree/master.svg?style=svg)](https://circleci.com/gh/jucron/restaurant-backend/tree/master)
 
-[![codecov](https://codecov.io/gh/jucron/spring5-mvc-rest/branch/master/graph/badge.svg?token=SCGLGCHWQ6)](https://codecov.io/gh/jucron/spring5-mvc-rest)
+[![codecov](https://codecov.io/gh/jucron/restaurant-backend/branch/master/graph/badge.svg?token=O0BKY0JHG4)](https://codecov.io/gh/jucron/restaurant-backend)
 
 # Restaurant Backend Rest Application
 
@@ -13,8 +13,7 @@ It is more properly to Test using the Postman with Authorization Header:
 
 ### Motivation:
 
-A restaurant application in which clients, waiters and kitchen staff can interact together. Tables are checked-in, orders can be processed and communicated to the cooks.
-This is the backend piece, used to provide endpoints and send REST response to the frontend. This application was created entirely by Test-Driven-Development technique.
+This project is a great opportunity to practice complex database modeling and object-oriented design. A restaurant management app is a real-world challenge worth solving.  
 
 ### Website of the App:
 >_todo: link (work in progress)_

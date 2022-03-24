@@ -15,6 +15,7 @@ import com.renault.restaurantbackend.repositories.MealRepository;
 import com.renault.restaurantbackend.repositories.OrderRepository;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -137,5 +139,16 @@ Testing repository fetch methods
     assertEquals(2,beverages.size());
     assertEquals(1,beverages.get(0).getOrder().size());
     assertEquals(Status.OPEN,beverages.get(0).getOrder().iterator().next().getStatus());
+  }
+  @Test
+  void findClientById() {
+    //given
+    long clientId = 1L;
+    //when
+    Optional<Client> clientOptional = clientRepository.findById(clientId);
+    //then
+    assertTrue(clientOptional.isPresent());
+    assertEquals(clientId,clientOptional.get().getId());
+
   }
 }

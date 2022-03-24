@@ -57,7 +57,7 @@ class ClientControllerTest extends AbstractRestControllerTest {
 
   MockMvc mockMvc;
 
-  String BASE_URL = ClientController.BASE_URL;
+  private final String BASE_URL = ClientController.BASE_URL;
 
   private final String CLIENT_EXAMPLE_NAME = "clientExampleName";
   private final String MEAL_EXAMPLE = "mealExample";

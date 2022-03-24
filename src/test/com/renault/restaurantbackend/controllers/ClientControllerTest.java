@@ -101,8 +101,11 @@ class ClientControllerTest extends AbstractRestControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.name", equalTo(clientExampleName)))
-        .andExpect(jsonPath("$.clientTable.number", equalTo(tableNumber)))
-        .andExpect(jsonPath("$.order", notNullValue()));
+        /** {@link clientService} must implement the following: */
+        .andExpect(jsonPath("$.checkInTime", notNullValue()))
+        .andExpect(jsonPath("$.order.status", equalTo("OPEN")))
+        .andExpect(jsonPath("$.clientTable.status", equalTo("OPEN")))
+        .andExpect(jsonPath("$.clientTable.number", equalTo(tableNumber)));
   }
   @Test
   void checkoutAClientByGivingClientsTableAndName() throws Exception {
@@ -127,7 +130,7 @@ class ClientControllerTest extends AbstractRestControllerTest {
             .content(asJsonString(form)))
                 .andExpect(status().isOk())
         .andExpect(jsonPath("$.name", equalTo(CLIENT_EXAMPLE_NAME)))
-        /** {@link clientService} todo: must implement the following: */
+        /** {@link clientService} must implement the following: */
         .andExpect(jsonPath("$.checkOutTime", notNullValue()))
         .andExpect(jsonPath("$.order.status", equalTo("CLOSED")))
         .andExpect(jsonPath("$.clientTable.status", equalTo("CLOSED")));

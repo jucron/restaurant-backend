@@ -25,6 +25,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static com.renault.restaurantbackend.domain.Status.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;;
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,28 +93,33 @@ class ClientServiceImplTest {
     assertEquals(CLIENT_EXAMPLE_NAME,capturedClient.getName()); //check name assignment
     assertNotNull(capturedClient.getCheckInTime()); //check time assignment
     assertEquals(TABLE_NUMBER,capturedClient.getClientTable().getNumber()); //tableNumber assigned
-    assertNotNull(capturedClient.getOrder()); //Order assigned
+    assertEquals(OPEN,capturedClient.getClientTable().getStatus()); //check table status change
+    assertEquals(OPEN,capturedClient.getOrder().getStatus()); //check order assign and status change
   }
   @Test
   void findANonCheckedOutClientWithNameAndTable_AssignACheckoutValue() {
     //given
     Client clientExample = new Client(); clientExample.setName(CLIENT_EXAMPLE_NAME);
-    ClientTable clientTableExample = new ClientTable(); clientTableExample.setNumber(TABLE_NUMBER);
-    clientExample.setClientTable(clientTableExample);
+    ClientTable tableExample = new ClientTable(); tableExample.setNumber(TABLE_NUMBER); tableExample.setStatus(OPEN);
+    ClientOrder order = new ClientOrder(); order.setStatus(OPEN);
+    clientExample.setClientTable(tableExample); clientExample.setOrder(order);
 
-    given(clientTableRepository.findByNumber(TABLE_NUMBER)).willReturn(clientTableExample);
+    given(clientTableRepository.findByNumber(TABLE_NUMBER)).willReturn(tableExample);
     given(clientRepository.findByNameAndClientTableAndCheckOutTime(
-        CLIENT_EXAMPLE_NAME,clientTableExample,null)).willReturn(clientExample);
+        CLIENT_EXAMPLE_NAME,tableExample,null)).willReturn(clientExample);
     given(clientMapper.clientToClientDTO(any(Client.class))).willReturn(new ClientDTO());
     //when
     ClientDTO clientDTO = clientService.checkoutClient(CLIENT_EXAMPLE_NAME, TABLE_NUMBER);
     //then
     verify(clientRepository).save(clientCaptor.capture()); //capture client saved
     verify(clientMapper).clientToClientDTO(any(Client.class));
+    verify(clientTableRepository).save(any(ClientTable.class));
+    verify(orderRepository).save(any(ClientOrder.class));
 
     Client capturedClient = clientCaptor.getValue();
     assertEquals(CLIENT_EXAMPLE_NAME,capturedClient.getName()); //check name equality
-    assertEquals(TABLE_NUMBER,capturedClient.getClientTable().getNumber()); //check table equality
+    assertEquals(CLOSED,capturedClient.getClientTable().getStatus()); //check table status change
+    assertEquals(CLOSED,capturedClient.getOrder().getStatus()); //check order status change
     assertNotNull(capturedClient.getCheckOutTime()); //check time assignment
   }
   @Test
@@ -122,7 +128,7 @@ class ClientServiceImplTest {
     long order_id = 1L;
     Client clientExample = new Client(); clientExample.setName(CLIENT_EXAMPLE_NAME);
     ClientTable clientTableExample = new ClientTable(); clientTableExample.setNumber(TABLE_NUMBER);
-    ClientOrder order = new ClientOrder(); order.setId(order_id); order.setStatus(Status.OPEN);
+    ClientOrder order = new ClientOrder(); order.setId(order_id); order.setStatus(OPEN);
     clientExample.setClientTable(clientTableExample);  clientExample.setOrder(order);
     List<Meal> meals = new ArrayList<>(List.of(new Meal()));
     List<Beverage> beverages = new ArrayList<>(List.of(new Beverage()));

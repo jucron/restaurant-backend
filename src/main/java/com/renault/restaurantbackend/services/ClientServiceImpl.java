@@ -21,6 +21,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static com.renault.restaurantbackend.domain.Status.*;
+
 @Service
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
@@ -45,8 +47,8 @@ public class ClientServiceImpl implements ClientService {
   public ClientDTO createClient(String name, int tableNumber) {
     Client newClient = new Client();
     newClient.setName(name); newClient.setCheckInTime(LocalDateTime.now());
-    ClientTable newClientTable = new ClientTable(); newClientTable.setNumber(tableNumber);
-    ClientOrder newOrder = new ClientOrder(); newOrder.setStatus(Status.OPEN);
+    ClientTable newClientTable = new ClientTable(); newClientTable.setNumber(tableNumber); newClientTable.setStatus(OPEN);
+    ClientOrder newOrder = new ClientOrder(); newOrder.setStatus(OPEN);
 
     clientTableRepository.save(newClientTable); orderRepository.save(newOrder);
     newClient.setClientTable(newClientTable); newClient.setOrder(newOrder);
@@ -65,6 +67,10 @@ public class ClientServiceImpl implements ClientService {
     //Assigning a checkout time to this client
     clientFetched.setCheckOutTime(LocalDateTime.now());
     clientRepository.save(clientFetched);
+    //Assigning status CLOSED to Table and Order
+    ClientTable table = clientFetched.getClientTable(); ClientOrder order = clientFetched.getOrder();
+    table.setStatus(CLOSED); order.setStatus(CLOSED);
+    clientTableRepository.save(table); orderRepository.save(order);
 
     return clientMapper.clientToClientDTO(clientFetched);
   }
@@ -78,7 +84,7 @@ public class ClientServiceImpl implements ClientService {
     //validation of query: client not found or order closed
     if (clientFetched == null) { return null; }
     ClientOrder order = clientFetched.getOrder();
-    if (order.getStatus()== Status.CLOSED) { return null; }
+    if (order.getStatus()== CLOSED) { return null; }
     //add meals and beverages associated with this order
     List<Meal> meals = new ArrayList<>(mealRepository.findAllByOrderId(order.getId()));
     List<Beverage> beverages = new ArrayList<>(beverageRepository.findAllByOrderId(order.getId()));

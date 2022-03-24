@@ -29,6 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static com.renault.restaurantbackend.domain.Status.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -89,10 +90,10 @@ class ClientControllerTest extends AbstractRestControllerTest {
     //given
     String clientExampleName = CLIENT_EXAMPLE_NAME;
     int tableNumber = 1;
-    ClientDTO clientDTO = new ClientDTO();
-    ClientTable clientTable = new ClientTable(); clientTable.setNumber(tableNumber);
-    clientDTO.setName(clientExampleName); clientDTO.setClientTable(clientTable);
-    clientDTO.setOrder(new ClientOrder());
+    ClientDTO clientDTO = new ClientDTO(); clientDTO.setName(clientExampleName); clientDTO.setCheckInTime(LocalDateTime.now());
+    ClientTable table = new ClientTable(); table.setNumber(tableNumber); table.setStatus(OPEN);
+    ClientOrder order = new ClientOrder(); order.setStatus(OPEN);
+    clientDTO.setOrder(order); clientDTO.setClientTable(table);
 
     given(clientService.createClient(clientExampleName, tableNumber)).willReturn(clientDTO);
     //when and then
@@ -118,8 +119,8 @@ class ClientControllerTest extends AbstractRestControllerTest {
 
     ClientDTO clientDTO = new ClientDTO();clientDTO.setName(clientExampleName);
     clientDTO.setCheckOutTime(LocalDateTime.now());
-    clientDTO.setClientTable(new ClientTable()); clientDTO.getClientTable().setStatus(Status.CLOSED);
-    clientDTO.setOrder(new ClientOrder()); clientDTO.getOrder().setStatus(Status.CLOSED);
+    clientDTO.setClientTable(new ClientTable()); clientDTO.getClientTable().setStatus(CLOSED);
+    clientDTO.setOrder(new ClientOrder()); clientDTO.getOrder().setStatus(CLOSED);
 
     given(clientService.checkoutClient(clientExampleName, tableNumber)).willReturn(clientDTO);
 
@@ -141,7 +142,7 @@ class ClientControllerTest extends AbstractRestControllerTest {
     double meal_value = 10.05; double beverage_value = 5.45;
     Meal meal1 = new Meal();meal1.setMeal(MEAL_EXAMPLE); meal1.setValue(meal_value);
     Beverage beverage1 = new Beverage(); beverage1.setBeverage(BEVERAGE_EXAMPLE); beverage1.setValue(beverage_value);
-    ClientOrder order1 = new ClientOrder(); order1.setStatus(Status.OPEN);
+    ClientOrder order1 = new ClientOrder(); order1.setStatus(OPEN);
     meal1.setOrder(new HashSet<>(Set.of(order1))); beverage1.setOrder((new HashSet<>(Set.of(order1))));
     Client client = new Client(); client.setOrder(order1); client.setName(CLIENT_EXAMPLE_NAME);
 
@@ -159,7 +160,7 @@ class ClientControllerTest extends AbstractRestControllerTest {
             .content(asJsonString(form)))
                 .andExpect(status().isOk())
         .andExpect(jsonPath("$.client.name", equalTo(CLIENT_EXAMPLE_NAME)))
-        .andExpect(jsonPath("$.client.order.status", equalTo(Status.OPEN.toString())))
+        .andExpect(jsonPath("$.client.order.status", equalTo(OPEN.toString())))
         .andExpect(jsonPath("$.meals[0].meal", equalTo(MEAL_EXAMPLE)))
         .andExpect(jsonPath("$.beverages[0].beverage", equalTo(BEVERAGE_EXAMPLE)))
         .andExpect(jsonPath("$.totalCost", equalTo(meal_value+beverage_value)));

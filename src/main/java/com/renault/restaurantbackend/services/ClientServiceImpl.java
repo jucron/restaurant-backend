@@ -45,7 +45,7 @@ public class ClientServiceImpl implements ClientService {
 
   @Override
   public ClientDTO createClient(String name, int tableNumber) {
-    //Validation: Check if TableNumber is being used
+    //Validation: Check if TableNumber is being used (status==OPEN)
     if (clientTableRepository.findByNumberAndStatus(tableNumber,OPEN)!=null) {
      return null;
     }
@@ -64,7 +64,7 @@ public class ClientServiceImpl implements ClientService {
   @Override
   public ClientDTO checkoutClient(String clientName, int tableNumber) {
     ClientTable clientTable = clientTableRepository.findByNumberAndStatus(tableNumber,OPEN);
-    //Validation: Check if Table have OPEN status
+    //Validation: Check if Table have CLOSED status (not in use)
     if (clientTable.getStatus()==CLOSED) {
       return null;
     }

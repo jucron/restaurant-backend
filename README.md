@@ -32,8 +32,9 @@ Check the Swagger Api Documentation: [_work in progress_]
 * Assign a waiter to an Order
 * Assign a cook to an Order
 ### Table management _(work in progress)_
-* Create a Table with an unique number
+* Create a Table with a unique number
 * Check Tables that are 'OPEN' to assign new clients
+* Assign a Waiter to an 'OPEN' Table
 Note: Table status is managed by Client check-in/out
 ### Menu management _(work in progress)_
 * Create a new Menu with a name (for example: "dinner menu") 
@@ -43,7 +44,7 @@ Note: Table status is managed by Client check-in/out
 * Remove a Meal/Beverage from an Order
 * Delete a a Meal/Beverage
 ### Workers management _(work in progress)_
-* Create a worker, with type (Waiter, Cook, etc), and associate with a Login account
+* Create a worker, with type (Waiter, Cook, etc.), and associate with a Login account
 * Deactivate a worker
 ### Login management _(work in progress)_
 * Workers are able to create an account with unique username and e-mail

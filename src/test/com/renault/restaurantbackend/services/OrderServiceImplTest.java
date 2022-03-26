@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 
 class OrderServiceImplTest {
 
-  OrderService orderService;
+  private OrderService orderService;
 
   @Mock
   private ClientOrderMapper clientOrderMapper;
@@ -38,7 +38,7 @@ class OrderServiceImplTest {
   @Mock
   private CookRepository cookRepository;
   @Captor
-  ArgumentCaptor<ClientOrder> orderArgumentCaptor;
+  private ArgumentCaptor<ClientOrder> orderArgumentCaptor;
 
   private final long CLIENT_ID = 1;
   private final long ORDER_ID = 10;

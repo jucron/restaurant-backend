@@ -80,6 +80,7 @@ class ClientServiceImplTest {
   @Test
   void createANewClientWithAGivenNameAndTableNumber_returnsDTOWithNewOrderAndTable() {
     //given
+    given(clientTableRepository.findByNumberAndStatus(TABLE_NUMBER,OPEN)).willReturn(null);
     given(clientMapper.clientToClientDTO(any(Client.class))).willReturn(new ClientDTO());
     //when
     ClientDTO clientDTO = clientService.createClient(CLIENT_EXAMPLE_NAME, TABLE_NUMBER);

@@ -5,9 +5,13 @@ import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
 import com.renault.restaurantbackend.domain.Client;
 import com.renault.restaurantbackend.domain.ClientOrder;
 import com.renault.restaurantbackend.domain.Cook;
+import com.renault.restaurantbackend.domain.Meal;
 import com.renault.restaurantbackend.domain.Status;
 import com.renault.restaurantbackend.domain.Waiter;
 import com.renault.restaurantbackend.services.OrderService;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,10 +34,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class OrderControllerTest {
   /*Expected behavior of this class:
     1 - OK: get Order that belong to a Client
-    2 - todo: assign a Cook to an Order
+    2 - OK: assign a Cook to an Order
     3 - OK: assign a Waiter to an Order
-    4 - todo: assign a Meal to an Order
-    5 - todo: assign a Beverage to an Order
    */
   private final String BASE_URL = OrderController.BASE_URL;
   private final long CLIENT_ID = 1;
@@ -106,14 +108,5 @@ class OrderControllerTest {
         .andExpect(jsonPath("$.id", equalTo((int) ORDER_ID)))
         .andExpect(jsonPath("$.status", equalTo("OPEN")))
         .andExpect(jsonPath("$.cook.id", equalTo((int)COOK_ID)));
-
-  }
-  @Test
-  void assignAMealToAnOrder() throws Exception {
-
-  }
-  @Test
-  void assignABeverageToAnOrder() throws Exception {
-
   }
 }

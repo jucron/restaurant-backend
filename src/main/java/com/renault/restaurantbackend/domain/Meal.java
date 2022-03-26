@@ -20,7 +20,9 @@ public class Meal {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(unique = true)
   private String meal;
+
   private double value;
 
   @ManyToMany(fetch = FetchType.EAGER)

@@ -18,6 +18,7 @@ public class ClientTable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(unique = true)
   private int number;
 
   @Enumerated(EnumType.STRING)

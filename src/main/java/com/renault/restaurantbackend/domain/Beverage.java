@@ -19,7 +19,9 @@ public class Beverage {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(unique = true)
   private String beverage;
+
   private double value;
 
   @ManyToMany(fetch = FetchType.EAGER)

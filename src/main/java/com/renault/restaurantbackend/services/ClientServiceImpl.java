@@ -45,6 +45,11 @@ public class ClientServiceImpl implements ClientService {
 
   @Override
   public ClientDTO createClient(String name, int tableNumber) {
+    //Validation: Check if TableNumber is being used
+    if (clientTableRepository.findByNumberAndStatus(tableNumber,OPEN)!=null) {
+     return null;
+    }
+    //Operation: create new client, table and order
     Client newClient = new Client();
     newClient.setName(name); newClient.setCheckInTime(LocalDateTime.now());
     ClientTable newClientTable = new ClientTable(); newClientTable.setNumber(tableNumber); newClientTable.setStatus(OPEN);
@@ -58,8 +63,12 @@ public class ClientServiceImpl implements ClientService {
 
   @Override
   public ClientDTO checkoutClient(String clientName, int tableNumber) {
+    ClientTable clientTable = clientTableRepository.findByNumberAndStatus(tableNumber,OPEN);
+    //Validation: Check if Table have OPEN status
+    if (clientTable.getStatus()==CLOSED) {
+      return null;
+    }
     //fetching client by parameters
-    ClientTable clientTable = clientTableRepository.findByNumber(tableNumber);
     Client clientFetched = clientRepository.findByNameAndClientTableAndCheckOutTime(
         clientName,clientTable,null);
     //validation of query
@@ -78,7 +87,7 @@ public class ClientServiceImpl implements ClientService {
   @Override
   public ConsumptionListDTO getListOfConsumption(String clientName, int tableNumber) {
     //fetching client by parameters
-    ClientTable clientTable = clientTableRepository.findByNumber(tableNumber);
+    ClientTable clientTable = clientTableRepository.findByNumberAndStatus(tableNumber,OPEN);
     Client clientFetched = clientRepository.findByNameAndClientTableAndCheckOutTime(
         clientName,clientTable,null);
     //validation of query: client not found or order closed

@@ -104,7 +104,7 @@ class ClientServiceImplTest {
     ClientOrder order = new ClientOrder(); order.setStatus(OPEN);
     clientExample.setClientTable(tableExample); clientExample.setOrder(order);
 
-    given(clientTableRepository.findByNumber(TABLE_NUMBER)).willReturn(tableExample);
+    given(clientTableRepository.findByNumberAndStatus(TABLE_NUMBER,OPEN)).willReturn(tableExample);
     given(clientRepository.findByNameAndClientTableAndCheckOutTime(
         CLIENT_EXAMPLE_NAME,tableExample,null)).willReturn(clientExample);
     given(clientMapper.clientToClientDTO(any(Client.class))).willReturn(new ClientDTO());
@@ -133,7 +133,7 @@ class ClientServiceImplTest {
     List<Meal> meals = new ArrayList<>(List.of(new Meal()));
     List<Beverage> beverages = new ArrayList<>(List.of(new Beverage()));
 
-    given(clientTableRepository.findByNumber(TABLE_NUMBER)).willReturn(clientTableExample);
+    given(clientTableRepository.findByNumberAndStatus(TABLE_NUMBER,OPEN)).willReturn(clientTableExample);
     given(clientRepository.findByNameAndClientTableAndCheckOutTime(
         CLIENT_EXAMPLE_NAME,clientTableExample,null)).willReturn(clientExample);
     given(mealRepository.findAllByOrderId(order.getId())).willReturn(meals);

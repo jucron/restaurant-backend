@@ -25,8 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static com.renault.restaurantbackend.domain.Status.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -66,12 +68,13 @@ Testing repository fetch methods
       Client clientExample2 = new Client(); clientExample2.setName(CLIENT_NAME_2);
       ClientTable clientTable1 = new ClientTable(); clientTable1.setNumber(CLIENT_TABLE_NUMBER_1);
       ClientTable clientTable2 = new ClientTable(); clientTable2.setNumber(CLIENT_TABLE_NUMBER_2);
+      clientTable1.setStatus(OPEN); clientTable2.setStatus(CLOSED);
       //persisting and generating ID with table and client
       clientTableRepository.save(clientTable1); clientTableRepository.save(clientTable2);
       clientExample1.setClientTable(clientTable1); clientExample2.setClientTable(clientTable2);
       clientRepository.save(clientExample1); clientRepository.save(clientExample2);
       //creating, persisting and gen.Id with Order
-      ClientOrder order1 = new ClientOrder(); order1.setStatus(Status.OPEN);
+      ClientOrder order1 = new ClientOrder(); order1.setStatus(OPEN);
       orderRepository.save(order1);
       //associating order with client
       clientExample1.setOrder(order1); clientRepository.save(clientExample1);
@@ -98,18 +101,21 @@ Testing repository fetch methods
     assertEquals(2,clientList.size());
   }
   @Test
-  void findTableByTableNumber() {
+  void findTableByTableNumberAndStatus() {
     //given
     //when
-    ClientTable clientTable = clientTableRepository.findByNumber(CLIENT_TABLE_NUMBER_1);
+    ClientTable existingClientTable = clientTableRepository.findByNumberAndStatus(CLIENT_TABLE_NUMBER_1,OPEN);
+    ClientTable nonExistingClientTable = clientTableRepository.findByNumberAndStatus(CLIENT_TABLE_NUMBER_2,OPEN);
+
     //then
-    assertNotNull(clientTable.getId());
-    assertEquals(CLIENT_TABLE_NUMBER_1,clientTable.getNumber());
+    assertNotNull(existingClientTable.getId());
+    assertEquals(CLIENT_TABLE_NUMBER_1,existingClientTable.getNumber());
+    assertNull(nonExistingClientTable);
   }
   @Test
   void findClientByNameAndClientTableAndCheckOutTimeNull() {
     //given
-    ClientTable clientTable = clientTableRepository.findByNumber(CLIENT_TABLE_NUMBER_1);
+    ClientTable clientTable = clientTableRepository.findByNumberAndStatus(CLIENT_TABLE_NUMBER_1,OPEN);
     //when
     Client clientFetched = clientRepository.findByNameAndClientTableAndCheckOutTime(
         CLIENT_NAME_1,clientTable,null);
@@ -127,7 +133,7 @@ Testing repository fetch methods
     //then
     assertEquals(2,meals.size());
     assertEquals(1,meals.get(0).getOrder().size());
-    assertEquals(Status.OPEN,meals.get(0).getOrder().iterator().next().getStatus());
+    assertEquals(OPEN,meals.get(0).getOrder().iterator().next().getStatus());
   }
   @Test
   void findAllBeveragesByOrderId() {
@@ -138,7 +144,7 @@ Testing repository fetch methods
     //then
     assertEquals(2,beverages.size());
     assertEquals(1,beverages.get(0).getOrder().size());
-    assertEquals(Status.OPEN,beverages.get(0).getOrder().iterator().next().getStatus());
+    assertEquals(OPEN,beverages.get(0).getOrder().iterator().next().getStatus());
   }
   @Test
   void findClientById() {

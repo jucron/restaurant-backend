@@ -23,7 +23,7 @@ Check the Swagger Api Documentation: [_work in progress_]
 
 ## Features of this API 
 ### Client management
-* View all clients
+* View list of all clients and their details
 * Check-in a new client by assigning a Table number and Order
 * Verify Client's Order and get the list of consumption
 * Check-out a client and leave important data for future analysis
@@ -33,7 +33,7 @@ Check the Swagger Api Documentation: [_work in progress_]
 * Assign a cook to an Order
 ### Table management _(work in progress)_
 * Create a Table with a unique number
-* Check Tables that are 'OPEN' to assign new clients
+* View list of all tables and their status
 * Assign a Waiter to an 'OPEN' Table
 Note: Table status is managed by Client check-in/out
 ### Menu management _(work in progress)_

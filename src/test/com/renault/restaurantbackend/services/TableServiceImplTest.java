@@ -2,6 +2,7 @@ package com.renault.restaurantbackend.services;
 
 import com.renault.restaurantbackend.api.v1.mapper.ClientTableMapper;
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
+import com.renault.restaurantbackend.api.v1.model.ClientTableListDTO;
 import com.renault.restaurantbackend.domain.ClientTable;
 import com.renault.restaurantbackend.domain.Status;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
@@ -73,5 +74,17 @@ class TableServiceImplTest {
     ClientTable tableCaptured = tableArgumentCaptor.getValue();
     assertEquals(tableNumberCount,tableCaptured.getNumber());
     assertEquals(CLOSED,tableCaptured.getStatus());
+  }
+  @Test
+  void getAListOfTables_returnsAListDTO() {
+    //given
+    ClientTable table1 = new ClientTable(); ClientTable table2 = new ClientTable();
+    given(tableRepository.findAll()).willReturn(new ArrayList<>(List.of(table1,table2)));
+    given(tableMapper.clientTableToClientTableDTO(any(ClientTable.class))).willReturn(new ClientTableDTO());
+    //when
+    ClientTableListDTO tableListDTO = tableService.getAllTables();
+    //then
+    assertEquals(2,tableListDTO.getTables().size());
+
   }
 }

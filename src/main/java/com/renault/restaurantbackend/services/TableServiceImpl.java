@@ -2,9 +2,11 @@ package com.renault.restaurantbackend.services;
 
 import com.renault.restaurantbackend.api.v1.mapper.ClientTableMapper;
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
+import com.renault.restaurantbackend.api.v1.model.ClientTableListDTO;
 import com.renault.restaurantbackend.domain.ClientTable;
 import com.renault.restaurantbackend.domain.Status;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,16 @@ public class TableServiceImpl implements TableService {
     newTable.setNumber(latestTableNumber+1);
     tableRepository.save(newTable);
     return tableMapper.clientTableToClientTableDTO(newTable);
+  }
+
+  @Override
+  public ClientTableListDTO getAllTables() {
+    List<ClientTable> tableList = tableRepository.findAll();
+    List<ClientTableDTO> tableDTOList = new ArrayList<>();
+    for (ClientTable table : tableList) {
+      tableDTOList.add(tableMapper.clientTableToClientTableDTO(table));
+    }
+    return new ClientTableListDTO(tableDTOList);
   }
 
   private int getLatestTableNumber() {

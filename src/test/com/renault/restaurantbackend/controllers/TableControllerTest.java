@@ -1,8 +1,13 @@
 package com.renault.restaurantbackend.controllers;
 
+import com.renault.restaurantbackend.api.v1.model.ClientDTO;
+import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
+import com.renault.restaurantbackend.api.v1.model.ClientTableListDTO;
 import com.renault.restaurantbackend.domain.Status;
 import com.renault.restaurantbackend.services.TableService;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
@@ -24,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TableControllerTest {
   /*Expected behavior of this class:
     1- OK: Create a Table with a unique number
-    2- todo: Check Tables that are 'OPEN' to assign new clients
+    2- OK: get list of tables and their status
     3- todo: assign a waiter to a tableNumber
     Note: Table status is managed by Client check-in/out
    */
@@ -60,5 +66,24 @@ class TableControllerTest {
         .andExpect(jsonPath("$.id", equalTo((int)TABLE_ID)))
         .andExpect(jsonPath("$.number", equalTo(TABLE_NUMBER)))
         .andExpect(jsonPath("$.status", equalTo("CLOSED")));
+  }
+  @Test
+  void checkTables_returnsListDTO() throws Exception {
+    //given
+    ClientTableDTO tableDTO1 = new ClientTableDTO(); ClientTableDTO tableDTO2 = new ClientTableDTO();
+
+    List<ClientTableDTO> tables = Arrays.asList(tableDTO1, tableDTO2);
+    given(tableService.getAllTables()).willReturn(new ClientTableListDTO(tables));
+
+    //when and then
+    mockMvc.perform(get(BASE_URL + "/get")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.tables", hasSize(2)));
+  }
+  @Test
+  void assignAWaiterToATable_returnsDTO() {
+
   }
 }

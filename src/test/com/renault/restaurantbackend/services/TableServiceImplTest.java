@@ -5,9 +5,12 @@ import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientTableListDTO;
 import com.renault.restaurantbackend.domain.ClientTable;
 import com.renault.restaurantbackend.domain.Status;
+import com.renault.restaurantbackend.domain.Waiter;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
+import com.renault.restaurantbackend.repositories.WaiterRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -28,6 +31,8 @@ class TableServiceImplTest {
   private ClientTableMapper tableMapper;
   @Mock
   private ClientTableRepository tableRepository;
+  @Mock
+  private WaiterRepository waiterRepository;
 
   @Captor
   private ArgumentCaptor<ClientTable> tableArgumentCaptor;
@@ -35,7 +40,7 @@ class TableServiceImplTest {
   @BeforeEach
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    tableService = new TableServiceImpl(tableRepository,tableMapper);
+    tableService = new TableServiceImpl(tableRepository,tableMapper, waiterRepository);
   }
 
   @Test
@@ -85,6 +90,24 @@ class TableServiceImplTest {
     ClientTableListDTO tableListDTO = tableService.getAllTables();
     //then
     assertEquals(2,tableListDTO.getTables().size());
+  }
+  @Test
+  void assignWaiterToATableByGivingTableNumberWaiterId_returnsTableDTO() {
+    //given
+    int tableNumber = 1; ClientTable table = new ClientTable(); table.setNumber(tableNumber);
+    long waiterId = 10L; Waiter waiter = new Waiter(); waiter.setId(waiterId);
 
+    given(tableRepository.findByNumberAndStatus(tableNumber,Status.OPEN)).willReturn(table);
+    given(waiterRepository.findById(waiterId)).willReturn(Optional.of(waiter));
+    given(tableMapper.clientTableToClientTableDTO(any())).willReturn(new ClientTableDTO());
+    //when
+    ClientTableDTO tableDTO = tableService.assignWaiterToTable(tableNumber,waiterId);
+    //then
+    assertNotNull(tableDTO);
+    verify(tableRepository).save(tableArgumentCaptor.capture()); //check table is saved
+
+    ClientTable tableCaptured = tableArgumentCaptor.getValue();
+    assertEquals(waiterId,tableCaptured.getWaiter().getId());
+    assertEquals(tableNumber,tableCaptured.getNumber());
   }
 }

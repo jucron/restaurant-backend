@@ -30,4 +30,9 @@ public class TableController {
   public ClientTableListDTO getAllTables() {
     return tableService.getAllTables();
   }
+  @PostMapping({"/{tableNumber}/{waiterId}/waiter"})
+  @ResponseStatus(HttpStatus.OK)
+  public ClientTableDTO assignWaiterToATable(@PathVariable int tableNumber, @PathVariable long waiterId) {
+    return tableService.assignWaiterToTable(tableNumber, waiterId);
+  }
 }

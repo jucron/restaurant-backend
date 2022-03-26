@@ -5,6 +5,7 @@ import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientTableListDTO;
 import com.renault.restaurantbackend.domain.Status;
+import com.renault.restaurantbackend.domain.Waiter;
 import com.renault.restaurantbackend.services.TableService;
 import java.util.Arrays;
 import java.util.List;
@@ -31,12 +32,13 @@ class TableControllerTest {
   /*Expected behavior of this class:
     1- OK: Create a Table with a unique number
     2- OK: get list of tables and their status
-    3- todo: assign a waiter to a tableNumber
+    3- OK: assign a waiter to a tableNumber
     Note: Table status is managed by Client check-in/out
    */
   private final String BASE_URL = TableController.BASE_URL;
   private final long TABLE_ID = 1L;
-  private final int TABLE_NUMBER = 10;
+  private final long WAITER_ID = 10L;
+  private final int TABLE_NUMBER = 100;
 
   @InjectMocks
   TableController tableController;
@@ -83,7 +85,16 @@ class TableControllerTest {
         .andExpect(jsonPath("$.tables", hasSize(2)));
   }
   @Test
-  void assignAWaiterToATable_returnsDTO() {
-
+  void assignAWaiterToATable_returnsDTO() throws Exception {
+    //given
+    Waiter waiter = new Waiter();waiter.setId(WAITER_ID);
+    ClientTableDTO tableDTO = new ClientTableDTO(); tableDTO.setWaiter(waiter);
+    given(tableService.assignWaiterToTable(TABLE_NUMBER,WAITER_ID)).willReturn(tableDTO);
+    //when and then
+    mockMvc.perform(post(BASE_URL +"/"+TABLE_NUMBER+"/"+WAITER_ID+ "/waiter")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.waiter.id", equalTo((int)WAITER_ID)));
   }
 }

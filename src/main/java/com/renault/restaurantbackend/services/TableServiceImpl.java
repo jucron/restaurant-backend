@@ -5,9 +5,12 @@ import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientTableListDTO;
 import com.renault.restaurantbackend.domain.ClientTable;
 import com.renault.restaurantbackend.domain.Status;
+import com.renault.restaurantbackend.domain.Waiter;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
+import com.renault.restaurantbackend.repositories.WaiterRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class TableServiceImpl implements TableService {
   private final ClientTableRepository tableRepository;
   private final ClientTableMapper tableMapper;
+  private final WaiterRepository waiterRepository;
 
 
   @Override
@@ -37,6 +41,20 @@ public class TableServiceImpl implements TableService {
       tableDTOList.add(tableMapper.clientTableToClientTableDTO(table));
     }
     return new ClientTableListDTO(tableDTOList);
+  }
+
+  @Override
+  public ClientTableDTO assignWaiterToTable(int tableNumber, long waiterId) {
+    //Find table in repo (Table must be OPEN, meaning in use by Client)
+    ClientTable tableFetched = tableRepository.findByNumberAndStatus(tableNumber,Status.OPEN);
+    if (tableFetched==null) {return null;}
+    //table found, find waiter in repo
+    Optional<Waiter> waiterFetchedOptional = waiterRepository.findById(waiterId);
+    if (waiterFetchedOptional.isEmpty()) {return null;}
+    //table and waiter exists, assign them and save
+    tableFetched.setWaiter(waiterFetchedOptional.get());
+    tableRepository.save(tableFetched);
+    return tableMapper.clientTableToClientTableDTO(tableFetched);
   }
 
   private int getLatestTableNumber() {

@@ -7,4 +7,6 @@ public interface TableService {
   ClientTableDTO createTable();
 
   ClientTableListDTO getAllTables();
+
+  ClientTableDTO assignWaiterToTable(int tableNumber, long waiterId);
 }

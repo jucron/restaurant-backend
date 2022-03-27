@@ -31,13 +31,16 @@ Check the Swagger Api Documentation: [_work in progress_]
 * Verify active Orders so that staff can take action
 * Assign a waiter to an Order
 * Assign a cook to an Order
-### Table management _(work in progress)_
+### Table management 
 * Create a Table with a unique number
 * View list of all tables and their status
 * Assign a Waiter to an 'OPEN' Table
+
 Note: Table status is managed by Client check-in/out
 ### Menu management _(work in progress)_
 * Create a new Menu with a name (for example: "dinner menu") 
+
+Note: Menu will hold the time registry in which the last Meal/Beverage was created
 ### Meals and Beverages management _(work in progress)_
 * Create a Meal/Beverage and associate it with an existing Menu
 * Take Client's Order by assigning a Meal/Beverage from an existing Menu

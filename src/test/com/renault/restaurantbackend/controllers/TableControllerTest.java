@@ -1,11 +1,9 @@
 package com.renault.restaurantbackend.controllers;
 
-import com.renault.restaurantbackend.api.v1.model.ClientDTO;
-import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientTableListDTO;
+import com.renault.restaurantbackend.api.v1.model.WaiterDTO;
 import com.renault.restaurantbackend.domain.Status;
-import com.renault.restaurantbackend.domain.Waiter;
 import com.renault.restaurantbackend.services.TableService;
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +18,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -57,7 +53,7 @@ class TableControllerTest {
   @Test
   void createATableWithAnUniqueNumber_returnsDTO() throws Exception {
     //given
-    ClientTableDTO tableDTO = new ClientTableDTO(); tableDTO.setId(TABLE_ID);
+    ClientTableDTO tableDTO = new ClientTableDTO();
     tableDTO.setNumber(TABLE_NUMBER); tableDTO.setStatus(Status.CLOSED);
     given(tableService.createTable()).willReturn(tableDTO);
     //when and then
@@ -65,7 +61,6 @@ class TableControllerTest {
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id", equalTo((int)TABLE_ID)))
         .andExpect(jsonPath("$.number", equalTo(TABLE_NUMBER)))
         .andExpect(jsonPath("$.status", equalTo("CLOSED")));
   }
@@ -87,8 +82,8 @@ class TableControllerTest {
   @Test
   void assignAWaiterToATable_returnsDTO() throws Exception {
     //given
-    Waiter waiter = new Waiter();waiter.setId(WAITER_ID);
-    ClientTableDTO tableDTO = new ClientTableDTO(); tableDTO.setWaiter(waiter);
+    WaiterDTO waiterDTO = new WaiterDTO();waiterDTO.setId(WAITER_ID);
+    ClientTableDTO tableDTO = new ClientTableDTO(); tableDTO.setWaiterDTO(waiterDTO);
     given(tableService.assignWaiterToTable(TABLE_NUMBER,WAITER_ID)).willReturn(tableDTO);
     //when and then
     mockMvc.perform(post(BASE_URL +"/"+TABLE_NUMBER+"/"+WAITER_ID+ "/waiter")

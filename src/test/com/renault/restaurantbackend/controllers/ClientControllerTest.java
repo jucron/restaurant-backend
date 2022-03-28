@@ -1,6 +1,7 @@
 package com.renault.restaurantbackend.controllers;
 
 import com.renault.restaurantbackend.api.v1.mapper.AbstractRestControllerTest;
+import com.renault.restaurantbackend.api.v1.model.BeverageDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
@@ -8,14 +9,7 @@ import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
 import com.renault.restaurantbackend.api.v1.model.ConsumptionListDTO;
 import com.renault.restaurantbackend.api.v1.model.MealDTO;
 import com.renault.restaurantbackend.controllers.forms.ClientNameAndTableNumberForm;
-import com.renault.restaurantbackend.domain.Beverage;
-import com.renault.restaurantbackend.domain.Client;
-import com.renault.restaurantbackend.domain.ClientOrder;
-import com.renault.restaurantbackend.domain.ClientTable;
-import com.renault.restaurantbackend.domain.Meal;
-import com.renault.restaurantbackend.domain.Status;
 import com.renault.restaurantbackend.services.ClientService;
-import com.renault.restaurantbackend.services.ClientServiceImpl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,22 +21,21 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.matchers.NotNull;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static com.renault.restaurantbackend.domain.Status.*;
+import static com.renault.restaurantbackend.domain.Status.CLOSED;
+import static com.renault.restaurantbackend.domain.Status.OPEN;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 class ClientControllerTest extends AbstractRestControllerTest {
   /*Expected behavior of this class:
@@ -96,7 +89,7 @@ class ClientControllerTest extends AbstractRestControllerTest {
     ClientDTO clientDTO = new ClientDTO(); clientDTO.setName(clientExampleName); clientDTO.setCheckInTime(LocalDateTime.now());
     ClientTableDTO tableDTO = new ClientTableDTO(); tableDTO.setNumber(tableNumber); tableDTO.setStatus(OPEN);
     ClientOrderDTO orderDTO = new ClientOrderDTO(); orderDTO.setStatus(OPEN);
-    clientDTO.setOrderDTO(orderDTO); clientDTO.setClientTableDTO(tableDTO);
+    clientDTO.setOrderDTO(orderDTO); clientDTO.setTableDTO(tableDTO);
 
     given(clientService.createClient(clientExampleName, tableNumber)).willReturn(clientDTO);
     //when and then
@@ -122,7 +115,7 @@ class ClientControllerTest extends AbstractRestControllerTest {
 
     ClientDTO clientDTO = new ClientDTO();clientDTO.setName(clientExampleName);
     clientDTO.setCheckOutTime(LocalDateTime.now());
-    clientDTO.setClientTableDTO(new ClientTableDTO()); clientDTO.getClientTableDTO().setStatus(CLOSED);
+    clientDTO.setTableDTO(new ClientTableDTO()); clientDTO.getTableDTO().setStatus(CLOSED);
     clientDTO.setOrderDTO(new ClientOrderDTO()); clientDTO.getOrderDTO().setStatus(CLOSED);
 
     given(clientService.checkoutClient(clientExampleName, tableNumber)).willReturn(clientDTO);
@@ -143,10 +136,10 @@ class ClientControllerTest extends AbstractRestControllerTest {
   void billViewByActiveTableAndClientAndOrder_returnsListOfConsumption() throws Exception {
     //given
     double meal_value = 10.05; double beverage_value = 5.45;
-    MealDTO mealDTO = new Meal();mealDTO.setMeal(MEAL_EXAMPLE); mealDTO.setValue(meal_value);
-    Beverage beverage1 = new Beverage(); beverage1.setBeverage(BEVERAGE_EXAMPLE); beverage1.setValue(beverage_value);
-    ClientOrderDTO orderDTO = new ClientOrder(); orderDTO.setStatus(OPEN);
-    mealDTO.setOrder(new HashSet<>(Set.of(orderDTO))); beverage1.setOrder((new HashSet<>(Set.of(orderDTO))));
+    MealDTO mealDTO = new MealDTO();mealDTO.setMeal(MEAL_EXAMPLE); mealDTO.setValue(meal_value);
+    BeverageDTO beverage1 = new BeverageDTO(); beverage1.setBeverage(BEVERAGE_EXAMPLE); beverage1.setValue(beverage_value);
+    ClientOrderDTO orderDTO = new ClientOrderDTO(); orderDTO.setStatus(OPEN);
+    mealDTO.setOrdersDTO(new HashSet<>(Set.of(orderDTO))); beverage1.setOrdersDTO((new HashSet<>(Set.of(orderDTO))));
     ClientDTO clientDTO = new ClientDTO(); clientDTO.setOrderDTO(orderDTO); clientDTO.setName(CLIENT_EXAMPLE_NAME);
 
     ClientNameAndTableNumberForm form = new ClientNameAndTableNumberForm(

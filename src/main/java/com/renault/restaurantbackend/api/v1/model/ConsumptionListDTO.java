@@ -1,8 +1,5 @@
 package com.renault.restaurantbackend.api.v1.model;
 
-import com.renault.restaurantbackend.domain.Beverage;
-import com.renault.restaurantbackend.domain.Client;
-import com.renault.restaurantbackend.domain.Meal;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ConsumptionListDTO {
   ClientDTO clientDTO;
-  List<MealDTO> meals;
-  List<BeverageDTO> beverages;
+  List<MealDTO> mealsDTO;
+  List<BeverageDTO> beveragesDTO;
   double totalCost;
 }

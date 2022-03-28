@@ -1,9 +1,7 @@
 package com.renault.restaurantbackend.api.v1.mapper;
 
 import com.renault.restaurantbackend.api.v1.model.BeverageDTO;
-import com.renault.restaurantbackend.api.v1.model.MealDTO;
 import com.renault.restaurantbackend.domain.Beverage;
-import com.renault.restaurantbackend.domain.Meal;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -13,7 +11,9 @@ public interface BeverageMapper {
 
   BeverageMapper INSTANCE = Mappers.getMapper(BeverageMapper.class);
 
-  @Mapping(source = "id", target = "id")
+  @Mapping(source = "beverage", target = "beverage")
+  @Mapping(source = "orders", target = "ordersDTO")
+  @Mapping(source = "menus", target = "menusDTO")
   BeverageDTO BeverageToBeverageDTO(Beverage beverage);
 
 }

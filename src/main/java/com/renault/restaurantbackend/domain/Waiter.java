@@ -1,6 +1,5 @@
 package com.renault.restaurantbackend.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,5 +19,5 @@ public class Waiter {
 
   @OneToOne
   @JoinColumn(name = "login_id")
-  private LoginStaff loginStaff;
+  private LoginStaff login;
 }

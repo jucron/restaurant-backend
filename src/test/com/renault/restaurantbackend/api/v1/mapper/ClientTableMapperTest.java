@@ -6,7 +6,8 @@ import com.renault.restaurantbackend.domain.Status;
 import com.renault.restaurantbackend.domain.Waiter;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ClientTableMapperTest {
 
@@ -23,7 +24,6 @@ class ClientTableMapperTest {
     //when
     ClientTableDTO clientTableDTO = clientTableMapper.clientTableToClientTableDTO(clientTable);
     //then
-    assertEquals(tableId,clientTableDTO.getId());
     assertEquals(tableNumber,clientTableDTO.getNumber());
     assertEquals(Status.OPEN,clientTableDTO.getStatus());
     assertNotNull(clientTableDTO.getWaiterDTO());

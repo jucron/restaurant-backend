@@ -1,17 +1,9 @@
 package com.renault.restaurantbackend.controllers;
 
-import com.renault.restaurantbackend.api.v1.mapper.ClientOrderMapper;
 import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
-import com.renault.restaurantbackend.domain.Client;
-import com.renault.restaurantbackend.domain.ClientOrder;
-import com.renault.restaurantbackend.domain.Cook;
-import com.renault.restaurantbackend.domain.Meal;
-import com.renault.restaurantbackend.domain.Status;
-import com.renault.restaurantbackend.domain.Waiter;
+import com.renault.restaurantbackend.api.v1.model.CookDTO;
+import com.renault.restaurantbackend.api.v1.model.WaiterDTO;
 import com.renault.restaurantbackend.services.OrderService;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,10 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static com.renault.restaurantbackend.domain.Status.*;
+import static com.renault.restaurantbackend.domain.Status.OPEN;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -77,8 +67,8 @@ class OrderControllerTest {
   void assignAWaiterToAnOrder() throws Exception {
     //given
     ClientOrderDTO orderDTO = new ClientOrderDTO(); orderDTO.setId(ORDER_ID);
-    Waiter waiter = new Waiter(); waiter.setId(WAITER_ID);
-    orderDTO.setStatus(OPEN); orderDTO.setWaiter(waiter);
+    WaiterDTO waiterDTO = new WaiterDTO(); waiterDTO.setId(WAITER_ID);
+    orderDTO.setStatus(OPEN); orderDTO.setWaiterDTO(waiterDTO);
 
     given(orderService.assignWaiterToOrder(ORDER_ID, WAITER_ID)).willReturn(orderDTO);
 
@@ -95,8 +85,8 @@ class OrderControllerTest {
   void assignACookToAnOrder() throws Exception {
     //given
     ClientOrderDTO orderDTO = new ClientOrderDTO(); orderDTO.setId(ORDER_ID);
-    Cook cook = new Cook(); cook.setId(COOK_ID);
-    orderDTO.setStatus(OPEN); orderDTO.setCook(cook);
+    CookDTO cookDTO = new CookDTO(); cookDTO.setId(COOK_ID);
+    orderDTO.setStatus(OPEN); orderDTO.setCookDTO(cookDTO);
 
     given(orderService.assignCookToOrder(ORDER_ID, COOK_ID)).willReturn(orderDTO);
 

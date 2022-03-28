@@ -9,7 +9,6 @@ import com.renault.restaurantbackend.domain.Client;
 import com.renault.restaurantbackend.domain.ClientOrder;
 import com.renault.restaurantbackend.domain.ClientTable;
 import com.renault.restaurantbackend.domain.Meal;
-import com.renault.restaurantbackend.domain.Status;
 import com.renault.restaurantbackend.repositories.BeverageRepository;
 import com.renault.restaurantbackend.repositories.ClientRepository;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
@@ -25,12 +24,16 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.renault.restaurantbackend.domain.Status.*;
+import static com.renault.restaurantbackend.domain.Status.CLOSED;
+import static com.renault.restaurantbackend.domain.Status.OPEN;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+;
 
 class ClientServiceImplTest {
 
@@ -93,8 +96,8 @@ class ClientServiceImplTest {
     Client capturedClient = clientCaptor.getValue();
     assertEquals(CLIENT_EXAMPLE_NAME,capturedClient.getName()); //check name assignment
     assertNotNull(capturedClient.getCheckInTime()); //check time assignment
-    assertEquals(TABLE_NUMBER,capturedClient.getClientTable().getNumber()); //tableNumber assigned
-    assertEquals(OPEN,capturedClient.getClientTable().getStatus()); //check table status change
+    assertEquals(TABLE_NUMBER,capturedClient.getTable().getNumber()); //tableNumber assigned
+    assertEquals(OPEN,capturedClient.getTable().getStatus()); //check table status change
     assertEquals(OPEN,capturedClient.getOrder().getStatus()); //check order assign and status change
   }
   @Test
@@ -103,7 +106,7 @@ class ClientServiceImplTest {
     Client clientExample = new Client(); clientExample.setName(CLIENT_EXAMPLE_NAME);
     ClientTable tableExample = new ClientTable(); tableExample.setNumber(TABLE_NUMBER); tableExample.setStatus(OPEN);
     ClientOrder order = new ClientOrder(); order.setStatus(OPEN);
-    clientExample.setClientTable(tableExample); clientExample.setOrder(order);
+    clientExample.setTable(tableExample); clientExample.setOrder(order);
 
     given(clientTableRepository.findByNumberAndStatus(TABLE_NUMBER,OPEN)).willReturn(tableExample);
     given(clientRepository.findByNameAndClientTableAndCheckOutTime(
@@ -119,7 +122,7 @@ class ClientServiceImplTest {
 
     Client capturedClient = clientCaptor.getValue();
     assertEquals(CLIENT_EXAMPLE_NAME,capturedClient.getName()); //check name equality
-    assertEquals(CLOSED,capturedClient.getClientTable().getStatus()); //check table status change
+    assertEquals(CLOSED,capturedClient.getTable().getStatus()); //check table status change
     assertEquals(CLOSED,capturedClient.getOrder().getStatus()); //check order status change
     assertNotNull(capturedClient.getCheckOutTime()); //check time assignment
   }
@@ -130,7 +133,7 @@ class ClientServiceImplTest {
     Client clientExample = new Client(); clientExample.setName(CLIENT_EXAMPLE_NAME);
     ClientTable clientTableExample = new ClientTable(); clientTableExample.setNumber(TABLE_NUMBER);
     ClientOrder order = new ClientOrder(); order.setId(order_id); order.setStatus(OPEN);
-    clientExample.setClientTable(clientTableExample);  clientExample.setOrder(order);
+    clientExample.setTable(clientTableExample);  clientExample.setOrder(order);
     List<Meal> meals = new ArrayList<>(List.of(new Meal()));
     List<Beverage> beverages = new ArrayList<>(List.of(new Beverage()));
 
@@ -143,9 +146,9 @@ class ClientServiceImplTest {
     ConsumptionListDTO consumptionListDTO = clientService.
         getListOfConsumption(CLIENT_EXAMPLE_NAME, TABLE_NUMBER);
     //then
-    assertEquals(CLIENT_EXAMPLE_NAME,consumptionListDTO.getClient().getName());
-    assertEquals(TABLE_NUMBER,consumptionListDTO.getClient().getClientTable().getNumber());
-    assertEquals(meals,consumptionListDTO.getMeals());
-    assertEquals(beverages,consumptionListDTO.getBeverages());
+    assertEquals(CLIENT_EXAMPLE_NAME,consumptionListDTO.getClientDTO().getName());
+    assertEquals(TABLE_NUMBER,consumptionListDTO.getClientDTO().getTableDTO().getNumber());
+    assertEquals(meals,consumptionListDTO.getMealsDTO());
+    assertEquals(beverages,consumptionListDTO.getBeveragesDTO());
   }
 }

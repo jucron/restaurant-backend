@@ -1,8 +1,6 @@
 package com.renault.restaurantbackend.services;
 
-import com.renault.restaurantbackend.api.v1.mapper.BeverageMapper;
 import com.renault.restaurantbackend.api.v1.mapper.ClientMapper;
-import com.renault.restaurantbackend.api.v1.mapper.MealMapper;
 import com.renault.restaurantbackend.api.v1.model.BeverageDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
@@ -13,7 +11,6 @@ import com.renault.restaurantbackend.domain.Client;
 import com.renault.restaurantbackend.domain.ClientOrder;
 import com.renault.restaurantbackend.domain.ClientTable;
 import com.renault.restaurantbackend.domain.Meal;
-import com.renault.restaurantbackend.domain.Status;
 import com.renault.restaurantbackend.repositories.BeverageRepository;
 import com.renault.restaurantbackend.repositories.ClientRepository;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
@@ -25,7 +22,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.renault.restaurantbackend.domain.Status.*;
+import static com.renault.restaurantbackend.domain.Status.CLOSED;
+import static com.renault.restaurantbackend.domain.Status.OPEN;
 
 @Service
 @RequiredArgsConstructor
@@ -36,8 +34,6 @@ public class ClientServiceImpl implements ClientService {
   private final MealRepository mealRepository;
   private final BeverageRepository beverageRepository;
   private final OrderRepository orderRepository;
-  private final MealMapper mealMapper;
-  private final BeverageMapper beverageMapper;
 
   @Override
   public ClientListDTO getAllClients() {
@@ -62,7 +58,7 @@ public class ClientServiceImpl implements ClientService {
     ClientOrder newOrder = new ClientOrder(); newOrder.setStatus(OPEN);
 
     clientTableRepository.save(newClientTable); orderRepository.save(newOrder);
-    newClient.setClientTable(newClientTable); newClient.setOrder(newOrder);
+    newClient.setTable(newClientTable); newClient.setOrder(newOrder);
     clientRepository.save(newClient);
     return clientMapper.clientToClientDTO(newClient);
   }
@@ -83,7 +79,7 @@ public class ClientServiceImpl implements ClientService {
     clientFetched.setCheckOutTime(LocalDateTime.now());
     clientRepository.save(clientFetched);
     //Assigning status CLOSED to Table and Order
-    ClientTable table = clientFetched.getClientTable(); ClientOrder order = clientFetched.getOrder();
+    ClientTable table = clientFetched.getTable(); ClientOrder order = clientFetched.getOrder();
     table.setStatus(CLOSED); order.setStatus(CLOSED);
     clientTableRepository.save(table); orderRepository.save(order);
 
@@ -106,7 +102,7 @@ public class ClientServiceImpl implements ClientService {
     //Creating a ConsumptionList and adding all values fetched
     ConsumptionListDTO consumptionListDTO = new ConsumptionListDTO();
     consumptionListDTO.setClientDTO(clientMapper.clientToClientDTO(clientFetched));
-    consumptionListDTO.setMeals(mealsDTO); consumptionListDTO.setBeverages(beveragesDTO);
+    consumptionListDTO.setMealsDTO(mealsDTO); consumptionListDTO.setBeveragesDTO(beveragesDTO);
     consumptionListDTO.setTotalCost(calculateMealTotal(mealsDTO)+calculateBeverageTotal(beveragesDTO));
     return consumptionListDTO;
   }

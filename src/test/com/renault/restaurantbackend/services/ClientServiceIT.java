@@ -1,13 +1,10 @@
 package com.renault.restaurantbackend.services;
 
-import com.renault.restaurantbackend.api.v1.model.ClientDTO;
-import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
 import com.renault.restaurantbackend.domain.Beverage;
 import com.renault.restaurantbackend.domain.Client;
 import com.renault.restaurantbackend.domain.ClientOrder;
 import com.renault.restaurantbackend.domain.ClientTable;
 import com.renault.restaurantbackend.domain.Meal;
-import com.renault.restaurantbackend.domain.Status;
 import com.renault.restaurantbackend.repositories.BeverageRepository;
 import com.renault.restaurantbackend.repositories.ClientRepository;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
@@ -17,7 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static com.renault.restaurantbackend.domain.Status.*;
+import static com.renault.restaurantbackend.domain.Status.CLOSED;
+import static com.renault.restaurantbackend.domain.Status.OPEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -71,7 +68,7 @@ Testing repository fetch methods
       clientTable1.setStatus(OPEN); clientTable2.setStatus(CLOSED);
       //persisting and generating ID with table and client
       clientTableRepository.save(clientTable1); clientTableRepository.save(clientTable2);
-      clientExample1.setClientTable(clientTable1); clientExample2.setClientTable(clientTable2);
+      clientExample1.setTable(clientTable1); clientExample2.setTable(clientTable2);
       clientRepository.save(clientExample1); clientRepository.save(clientExample2);
       //creating, persisting and gen.Id with Order
       ClientOrder order1 = new ClientOrder(); order1.setStatus(OPEN);
@@ -85,8 +82,8 @@ Testing repository fetch methods
       Beverage beverage1 = new Beverage(); beverage1.setBeverage(BEVERAGE_EXAMPLE_1); beverage1.setValue(beverage_value);
       Beverage beverage2 = new Beverage(); beverage2.setBeverage(BEVERAGE_EXAMPLE_2); beverage2.setValue(beverage_value/2);
       //associate meals and beverages with Order
-      meal1.setOrder(new HashSet<>(Set.of(order1))); meal2.setOrder(new HashSet<>(Set.of(order1)));
-      beverage1.setOrder((new HashSet<>(Set.of(order1)))); beverage2.setOrder((new HashSet<>(Set.of(order1))));
+      meal1.setOrders(new HashSet<>(Set.of(order1))); meal2.setOrders(new HashSet<>(Set.of(order1)));
+      beverage1.setOrders((new HashSet<>(Set.of(order1)))); beverage2.setOrders((new HashSet<>(Set.of(order1))));
       mealRepository.saveAll(List.of(meal1,meal2)); beverageRepository.saveAll(List.of(beverage1,beverage2));
 
     }
@@ -132,8 +129,8 @@ Testing repository fetch methods
     List<Meal> meals = mealRepository.findAllByOrderId(orderId);
     //then
     assertEquals(2,meals.size());
-    assertEquals(1,meals.get(0).getOrder().size());
-    assertEquals(OPEN,meals.get(0).getOrder().iterator().next().getStatus());
+    assertEquals(1,meals.get(0).getOrders().size());
+    assertEquals(OPEN,meals.get(0).getOrders().iterator().next().getStatus());
   }
   @Test
   void findAllBeveragesByOrderId() {
@@ -143,8 +140,8 @@ Testing repository fetch methods
     List<Beverage> beverages = beverageRepository.findAllByOrderId(orderId);
     //then
     assertEquals(2,beverages.size());
-    assertEquals(1,beverages.get(0).getOrder().size());
-    assertEquals(OPEN,beverages.get(0).getOrder().iterator().next().getStatus());
+    assertEquals(1,beverages.get(0).getOrders().size());
+    assertEquals(OPEN,beverages.get(0).getOrders().iterator().next().getStatus());
   }
   @Test
   void findClientById() {

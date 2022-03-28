@@ -114,7 +114,7 @@ Testing repository fetch methods
     //given
     ClientTable clientTable = clientTableRepository.findByNumberAndStatus(CLIENT_TABLE_NUMBER_1,OPEN);
     //when
-    Client clientFetched = clientRepository.findByNameAndClientTableAndCheckOutTime(
+    Client clientFetched = clientRepository.findByNameAndTableAndCheckOutTime(
         CLIENT_NAME_1,clientTable,null);
     //then
     assertNotNull(clientFetched.getId());
@@ -126,7 +126,7 @@ Testing repository fetch methods
     //given
     long orderId = 1L;
     //when
-    List<Meal> meals = mealRepository.findAllByOrderId(orderId);
+    List<Meal> meals = mealRepository.findAllByOrdersId(orderId);
     //then
     assertEquals(2,meals.size());
     assertEquals(1,meals.get(0).getOrders().size());
@@ -137,7 +137,7 @@ Testing repository fetch methods
     //given
     long orderId = 1L;
     //when
-    List<Beverage> beverages = beverageRepository.findAllByOrderId(orderId);
+    List<Beverage> beverages = beverageRepository.findAllByOrdersId(orderId);
     //then
     assertEquals(2,beverages.size());
     assertEquals(1,beverages.get(0).getOrders().size());

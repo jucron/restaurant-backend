@@ -1,6 +1,5 @@
 package com.renault.restaurantbackend.controllers;
 
-import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
 import com.renault.restaurantbackend.api.v1.model.MealDTO;
 import com.renault.restaurantbackend.services.MealService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MealController {
   public static final String BASE_URL = "/api/v1/meals";
-  private MealService mealService;
+  private final MealService mealService;
 
   @PostMapping({"/{mealName}/{orderId}/order"})
   @ResponseStatus(HttpStatus.OK)

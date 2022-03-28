@@ -121,7 +121,7 @@ class ClientServiceImplTest {
     clientExample.setTable(tableExample); clientExample.setOrder(order);
 
     given(clientTableRepository.findByNumberAndStatus(TABLE_NUMBER,OPEN)).willReturn(tableExample);
-    given(clientRepository.findByNameAndClientTableAndCheckOutTime(
+    given(clientRepository.findByNameAndTableAndCheckOutTime(
         CLIENT_EXAMPLE_NAME,tableExample,null)).willReturn(clientExample);
     given(clientMapper.clientToClientDTO(any(Client.class))).willReturn(new ClientDTO());
     //when
@@ -161,11 +161,11 @@ class ClientServiceImplTest {
     BeverageDTO beverageDTOWithValue = new BeverageDTO(); beverageDTOWithValue.setValue(beverageValue);
 
     given(clientTableRepository.findByNumberAndStatus(TABLE_NUMBER,OPEN)).willReturn(tableExample);
-    given(clientRepository.findByNameAndClientTableAndCheckOutTime(
+    given(clientRepository.findByNameAndTableAndCheckOutTime(
         CLIENT_EXAMPLE_NAME,tableExample,null)).willReturn(clientExample);
     given(clientMapper.clientToClientDTO(clientExample)).willReturn(clientExampleDTO);
-    given(mealRepository.findAllByOrderId(order_id)).willReturn(meals);
-    given(beverageRepository.findAllByOrderId(order_id)).willReturn(beverages);
+    given(mealRepository.findAllByOrdersId(order_id)).willReturn(meals);
+    given(beverageRepository.findAllByOrdersId(order_id)).willReturn(beverages);
     given(mealMapper.MealToMealDTO(any(Meal.class))).willReturn(mealDTOWithValue);
     given(beverageMapper.beverageToBeverageDTO(any(Beverage.class))).willReturn(beverageDTOWithValue);
     //when
@@ -173,10 +173,10 @@ class ClientServiceImplTest {
         getListOfConsumption(CLIENT_EXAMPLE_NAME, TABLE_NUMBER);
     //then
     verify(clientTableRepository).findByNumberAndStatus(anyInt(),any());
-    verify(clientRepository).findByNameAndClientTableAndCheckOutTime(any(),any(),any());
+    verify(clientRepository).findByNameAndTableAndCheckOutTime(any(),any(),any());
     verify(clientMapper).clientToClientDTO(any());
-    verify(mealRepository).findAllByOrderId(anyLong());
-    verify(beverageRepository).findAllByOrderId(anyLong());
+    verify(mealRepository).findAllByOrdersId(anyLong());
+    verify(beverageRepository).findAllByOrdersId(anyLong());
     verify(mealMapper).MealToMealDTO(any());
     verify(beverageMapper).beverageToBeverageDTO(any());
 

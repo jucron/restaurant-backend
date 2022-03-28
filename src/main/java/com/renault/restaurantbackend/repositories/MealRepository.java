@@ -5,5 +5,5 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MealRepository extends JpaRepository<Meal, Long> {
-  List<Meal> findAllByOrderId(long orderId);
+  List<Meal> findAllByOrdersId(long orderId);
 }

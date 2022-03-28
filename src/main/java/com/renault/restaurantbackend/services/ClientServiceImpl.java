@@ -75,7 +75,7 @@ public class ClientServiceImpl implements ClientService {
       return null;
     }
     //fetching client by parameters
-    Client clientFetched = clientRepository.findByNameAndClientTableAndCheckOutTime(
+    Client clientFetched = clientRepository.findByNameAndTableAndCheckOutTime(
         clientName,clientTable,null);
     //validation of query
     if (clientFetched == null) { return null; }
@@ -94,7 +94,7 @@ public class ClientServiceImpl implements ClientService {
   public ConsumptionListDTO getListOfConsumption(String clientName, int tableNumber) {
     //fetching client by parameters
     ClientTable clientTable = clientTableRepository.findByNumberAndStatus(tableNumber,OPEN);
-    Client clientFetched = clientRepository.findByNameAndClientTableAndCheckOutTime(
+    Client clientFetched = clientRepository.findByNameAndTableAndCheckOutTime(
         clientName,clientTable,null);
     //validation of query: client not found or order closed
     if (clientFetched == null) { return null; }
@@ -125,7 +125,7 @@ public class ClientServiceImpl implements ClientService {
     return totalCost;
   }
   private List<MealDTO> convertMealListToMealDTOList(long orderId) {
-    List<Meal> meals = new ArrayList<>(mealRepository.findAllByOrderId(orderId));
+    List<Meal> meals = new ArrayList<>(mealRepository.findAllByOrdersId(orderId));
     List<MealDTO> mealsDTO = new ArrayList<>();
       for (Meal meal : meals) {
         mealsDTO.add(mealMapper.MealToMealDTO(meal));
@@ -133,7 +133,7 @@ public class ClientServiceImpl implements ClientService {
       return mealsDTO;
   }
   private List<BeverageDTO> convertBeverageListToBeverageDTOList(long orderId) {
-    List<Beverage> beverages = new ArrayList<>(beverageRepository.findAllByOrderId(orderId));
+    List<Beverage> beverages = new ArrayList<>(beverageRepository.findAllByOrdersId(orderId));
     List<BeverageDTO> beveragesDTO = new ArrayList<>();
     for (Beverage beverage : beverages) {
       beveragesDTO.add(beverageMapper.beverageToBeverageDTO(beverage)); //todo

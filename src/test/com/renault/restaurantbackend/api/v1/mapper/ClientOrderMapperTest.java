@@ -2,11 +2,14 @@ package com.renault.restaurantbackend.api.v1.mapper;
 
 import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
 import com.renault.restaurantbackend.domain.ClientOrder;
+import com.renault.restaurantbackend.domain.Cook;
 import com.renault.restaurantbackend.domain.Status;
+import com.renault.restaurantbackend.domain.Waiter;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ClientOrderMapperTest {
 
@@ -17,11 +20,14 @@ class ClientOrderMapperTest {
     //given
     ClientOrder order = new ClientOrder(); order.setId(1L);
     order.setStatus(Status.OPEN); order.setLastUpdated(LocalDateTime.now());
+    order.setCook(new Cook()); order.setWaiter(new Waiter());
     //when
     ClientOrderDTO orderDTO = clientOrderMapper.clientOrderToClientOrderDTO(order);
     //then
     assertEquals(order.getId(),orderDTO.getId());
     assertEquals(order.getStatus(),orderDTO.getStatus());
     assertEquals(order.getLastUpdated(),orderDTO.getLastUpdated());
+    assertNotNull(orderDTO.getCookDTO());
+    assertNotNull(orderDTO.getWaiterDTO());
   }
 }

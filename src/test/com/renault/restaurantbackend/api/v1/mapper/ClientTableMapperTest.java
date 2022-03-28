@@ -19,8 +19,8 @@ class ClientTableMapperTest {
     int tableNumber = 1;
     long tableId = 1L;
     ClientTable clientTable = new ClientTable(); clientTable.setStatus(Status.OPEN);
-    clientTable.setNumber(tableNumber); clientTable.setId(tableId); clientTable.setWaiter(new Waiter());
-
+    clientTable.setNumber(tableNumber); clientTable.setId(tableId);
+    clientTable.setWaiter(new Waiter());
     //when
     ClientTableDTO clientTableDTO = clientTableMapper.clientTableToClientTableDTO(clientTable);
     //then

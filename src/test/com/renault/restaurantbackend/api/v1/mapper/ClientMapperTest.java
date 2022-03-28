@@ -34,6 +34,5 @@ class ClientMapperTest {
     assertEquals(checkInTime,clientExampleDTO.getCheckInTime());
     assertEquals(Status.OPEN,clientExampleDTO.getOrderDTO().getStatus());
     assertEquals(TABLE_NUMBER,clientExampleDTO.getTableDTO().getNumber());
-
   }
 }

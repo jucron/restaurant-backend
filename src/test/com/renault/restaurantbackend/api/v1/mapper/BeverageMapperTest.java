@@ -21,7 +21,7 @@ class BeverageMapperTest {
     beverage.setOrders(new HashSet<>(Set.of(new ClientOrder())));
     beverage.setMenus(new HashSet<>(Set.of(new Menu())));
     //when
-    BeverageDTO beverageDTO = beverageMapper.BeverageToBeverageDTO(beverage);
+    BeverageDTO beverageDTO = beverageMapper.beverageToBeverageDTO(beverage);
     //then
     assertEquals(beverage_example,beverageDTO.getBeverage());
     assertEquals(beverage_value,beverageDTO.getValue());

@@ -1,9 +1,15 @@
 package com.renault.restaurantbackend.services;
 
+import com.renault.restaurantbackend.api.v1.mapper.BeverageMapper;
 import com.renault.restaurantbackend.api.v1.mapper.ClientMapper;
+import com.renault.restaurantbackend.api.v1.mapper.MealMapper;
+import com.renault.restaurantbackend.api.v1.model.BeverageDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
+import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
+import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
 import com.renault.restaurantbackend.api.v1.model.ConsumptionListDTO;
+import com.renault.restaurantbackend.api.v1.model.MealDTO;
 import com.renault.restaurantbackend.domain.Beverage;
 import com.renault.restaurantbackend.domain.Client;
 import com.renault.restaurantbackend.domain.ClientOrder;
@@ -29,6 +35,8 @@ import static com.renault.restaurantbackend.domain.Status.OPEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -51,6 +59,10 @@ class ClientServiceImplTest {
   BeverageRepository beverageRepository;
   @Mock
   OrderRepository orderRepository;
+  @Mock
+  MealMapper mealMapper;
+  @Mock
+  BeverageMapper beverageMapper;
   @Captor
   ArgumentCaptor<Client> clientCaptor;
 
@@ -61,7 +73,7 @@ class ClientServiceImplTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     clientService = new ClientServiceImpl(clientMapper,clientRepository, clientTableRepository,
-        mealRepository, beverageRepository, orderRepository);
+        mealRepository, beverageRepository, orderRepository, mealMapper, beverageMapper);
   }
 
   @Test
@@ -130,25 +142,48 @@ class ClientServiceImplTest {
   void findANonCheckedOutClientWithNameAndTable_fetchConsumptionList() {
     //given
     long order_id = 1L;
-    Client clientExample = new Client(); clientExample.setName(CLIENT_EXAMPLE_NAME);
-    ClientTable clientTableExample = new ClientTable(); clientTableExample.setNumber(TABLE_NUMBER);
-    ClientOrder order = new ClientOrder(); order.setId(order_id); order.setStatus(OPEN);
-    clientExample.setTable(clientTableExample);  clientExample.setOrder(order);
-    List<Meal> meals = new ArrayList<>(List.of(new Meal()));
-    List<Beverage> beverages = new ArrayList<>(List.of(new Beverage()));
+    double mealValue = 10;
+    double beverageValue = 30;
 
-    given(clientTableRepository.findByNumberAndStatus(TABLE_NUMBER,OPEN)).willReturn(clientTableExample);
+    Client clientExample = new Client(); clientExample.setName(CLIENT_EXAMPLE_NAME);
+    ClientTable tableExample = new ClientTable(); tableExample.setNumber(TABLE_NUMBER);
+    ClientOrder order = new ClientOrder(); order.setId(order_id); order.setStatus(OPEN);
+    clientExample.setTable(tableExample); clientExample.setOrder(order);
+
+    ClientDTO clientExampleDTO = new ClientDTO(); clientExampleDTO.setName(CLIENT_EXAMPLE_NAME);
+    ClientTableDTO tableExampleDTO = new ClientTableDTO(); tableExampleDTO.setNumber(TABLE_NUMBER);
+    ClientOrderDTO orderDTO = new ClientOrderDTO(); orderDTO.setId(order_id); orderDTO.setStatus(OPEN);
+    clientExampleDTO.setTableDTO(tableExampleDTO);  clientExampleDTO.setOrderDTO(orderDTO);
+
+    List<Meal> meals = new ArrayList<>(List.of(new Meal()));
+    MealDTO mealDTOWithValue = new MealDTO(); mealDTOWithValue.setValue(mealValue);
+    List<Beverage> beverages = new ArrayList<>(List.of(new Beverage()));
+    BeverageDTO beverageDTOWithValue = new BeverageDTO(); beverageDTOWithValue.setValue(beverageValue);
+
+    given(clientTableRepository.findByNumberAndStatus(TABLE_NUMBER,OPEN)).willReturn(tableExample);
     given(clientRepository.findByNameAndClientTableAndCheckOutTime(
-        CLIENT_EXAMPLE_NAME,clientTableExample,null)).willReturn(clientExample);
-    given(mealRepository.findAllByOrderId(order.getId())).willReturn(meals);
-    given(beverageRepository.findAllByOrderId(order.getId())).willReturn(beverages);
+        CLIENT_EXAMPLE_NAME,tableExample,null)).willReturn(clientExample);
+    given(clientMapper.clientToClientDTO(clientExample)).willReturn(clientExampleDTO);
+    given(mealRepository.findAllByOrderId(order_id)).willReturn(meals);
+    given(beverageRepository.findAllByOrderId(order_id)).willReturn(beverages);
+    given(mealMapper.MealToMealDTO(any(Meal.class))).willReturn(mealDTOWithValue);
+    given(beverageMapper.beverageToBeverageDTO(any(Beverage.class))).willReturn(beverageDTOWithValue);
     //when
     ConsumptionListDTO consumptionListDTO = clientService.
         getListOfConsumption(CLIENT_EXAMPLE_NAME, TABLE_NUMBER);
     //then
+    verify(clientTableRepository).findByNumberAndStatus(anyInt(),any());
+    verify(clientRepository).findByNameAndClientTableAndCheckOutTime(any(),any(),any());
+    verify(clientMapper).clientToClientDTO(any());
+    verify(mealRepository).findAllByOrderId(anyLong());
+    verify(beverageRepository).findAllByOrderId(anyLong());
+    verify(mealMapper).MealToMealDTO(any());
+    verify(beverageMapper).beverageToBeverageDTO(any());
+
     assertEquals(CLIENT_EXAMPLE_NAME,consumptionListDTO.getClientDTO().getName());
     assertEquals(TABLE_NUMBER,consumptionListDTO.getClientDTO().getTableDTO().getNumber());
-    assertEquals(meals,consumptionListDTO.getMealsDTO());
-    assertEquals(beverages,consumptionListDTO.getBeveragesDTO());
+    assertEquals(1,consumptionListDTO.getMealsDTO().size());
+    assertEquals(1,consumptionListDTO.getBeveragesDTO().size());
+    assertEquals((mealValue+beverageValue),consumptionListDTO.getTotalCost());
   }
 }

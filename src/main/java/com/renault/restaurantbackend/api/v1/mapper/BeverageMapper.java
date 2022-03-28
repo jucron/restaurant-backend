@@ -14,6 +14,6 @@ public interface BeverageMapper {
   @Mapping(source = "beverage", target = "beverage")
   @Mapping(source = "orders", target = "ordersDTO")
   @Mapping(source = "menus", target = "menusDTO")
-  BeverageDTO BeverageToBeverageDTO(Beverage beverage);
+  BeverageDTO beverageToBeverageDTO(Beverage beverage);
 
 }

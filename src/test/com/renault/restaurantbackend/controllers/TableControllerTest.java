@@ -90,6 +90,6 @@ class TableControllerTest {
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.waiter.id", equalTo((int)WAITER_ID)));
+        .andExpect(jsonPath("$.waiterDTO.id", equalTo((int)WAITER_ID)));
   }
 }

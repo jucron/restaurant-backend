@@ -79,7 +79,7 @@ class OrderControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo((int) ORDER_ID)))
         .andExpect(jsonPath("$.status", equalTo("OPEN")))
-        .andExpect(jsonPath("$.waiter.id", equalTo((int)WAITER_ID)));
+        .andExpect(jsonPath("$.waiterDTO.id", equalTo((int)WAITER_ID)));
   }
   @Test
   void assignACookToAnOrder() throws Exception {
@@ -97,6 +97,6 @@ class OrderControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo((int) ORDER_ID)))
         .andExpect(jsonPath("$.status", equalTo("OPEN")))
-        .andExpect(jsonPath("$.cook.id", equalTo((int)COOK_ID)));
+        .andExpect(jsonPath("$.cookDTO.id", equalTo((int)COOK_ID)));
   }
 }

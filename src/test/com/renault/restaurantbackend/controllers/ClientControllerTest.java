@@ -100,9 +100,9 @@ class ClientControllerTest extends AbstractRestControllerTest {
         .andExpect(jsonPath("$.name", equalTo(clientExampleName)))
         /** {@link clientService} must implement the following: */
         .andExpect(jsonPath("$.checkInTime", notNullValue()))
-        .andExpect(jsonPath("$.order.status", equalTo("OPEN")))
-        .andExpect(jsonPath("$.clientTable.status", equalTo("OPEN")))
-        .andExpect(jsonPath("$.clientTable.number", equalTo(tableNumber)));
+        .andExpect(jsonPath("$.orderDTO.status", equalTo("OPEN")))
+        .andExpect(jsonPath("$.tableDTO.status", equalTo("OPEN")))
+        .andExpect(jsonPath("$.tableDTO.number", equalTo(tableNumber)));
   }
   @Test
   void checkoutAClientByGivingClientsTableAndName() throws Exception {
@@ -129,8 +129,8 @@ class ClientControllerTest extends AbstractRestControllerTest {
         .andExpect(jsonPath("$.name", equalTo(CLIENT_EXAMPLE_NAME)))
         /** {@link clientService} must implement the following: */
         .andExpect(jsonPath("$.checkOutTime", notNullValue()))
-        .andExpect(jsonPath("$.order.status", equalTo("CLOSED")))
-        .andExpect(jsonPath("$.clientTable.status", equalTo("CLOSED")));
+        .andExpect(jsonPath("$.orderDTO.status", equalTo("CLOSED")))
+        .andExpect(jsonPath("$.tableDTO.status", equalTo("CLOSED")));
   }
   @Test
   void billViewByActiveTableAndClientAndOrder_returnsListOfConsumption() throws Exception {
@@ -155,10 +155,10 @@ class ClientControllerTest extends AbstractRestControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(asJsonString(form)))
                 .andExpect(status().isOk())
-        .andExpect(jsonPath("$.client.name", equalTo(CLIENT_EXAMPLE_NAME)))
-        .andExpect(jsonPath("$.client.order.status", equalTo(OPEN.toString())))
-        .andExpect(jsonPath("$.meals[0].meal", equalTo(MEAL_EXAMPLE)))
-        .andExpect(jsonPath("$.beverages[0].beverage", equalTo(BEVERAGE_EXAMPLE)))
+        .andExpect(jsonPath("$.clientDTO.name", equalTo(CLIENT_EXAMPLE_NAME)))
+        .andExpect(jsonPath("$.clientDTO.orderDTO.status", equalTo(OPEN.toString())))
+        .andExpect(jsonPath("$.mealsDTO[0].meal", equalTo(MEAL_EXAMPLE)))
+        .andExpect(jsonPath("$.beveragesDTO[0].beverage", equalTo(BEVERAGE_EXAMPLE)))
         .andExpect(jsonPath("$.totalCost", equalTo(meal_value+beverage_value)));
   }
 }

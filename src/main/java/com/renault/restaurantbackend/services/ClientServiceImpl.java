@@ -1,6 +1,8 @@
 package com.renault.restaurantbackend.services;
 
+import com.renault.restaurantbackend.api.v1.mapper.BeverageMapper;
 import com.renault.restaurantbackend.api.v1.mapper.ClientMapper;
+import com.renault.restaurantbackend.api.v1.mapper.MealMapper;
 import com.renault.restaurantbackend.api.v1.model.BeverageDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
@@ -34,6 +36,8 @@ public class ClientServiceImpl implements ClientService {
   private final MealRepository mealRepository;
   private final BeverageRepository beverageRepository;
   private final OrderRepository orderRepository;
+  private final MealMapper mealMapper;
+  private final BeverageMapper beverageMapper;
 
   @Override
   public ClientListDTO getAllClients() {
@@ -124,7 +128,7 @@ public class ClientServiceImpl implements ClientService {
     List<Meal> meals = new ArrayList<>(mealRepository.findAllByOrderId(orderId));
     List<MealDTO> mealsDTO = new ArrayList<>();
       for (Meal meal : meals) {
-        //mealsDTO.add(mealMapper.convert(meal)); //todo
+        mealsDTO.add(mealMapper.MealToMealDTO(meal));
       }
       return mealsDTO;
   }
@@ -132,7 +136,7 @@ public class ClientServiceImpl implements ClientService {
     List<Beverage> beverages = new ArrayList<>(beverageRepository.findAllByOrderId(orderId));
     List<BeverageDTO> beveragesDTO = new ArrayList<>();
     for (Beverage beverage : beverages) {
-      //beveragesDTO.add(mealMapper.convert(beverage)); //todo
+      beveragesDTO.add(beverageMapper.beverageToBeverageDTO(beverage)); //todo
     }
     return beveragesDTO;
   }

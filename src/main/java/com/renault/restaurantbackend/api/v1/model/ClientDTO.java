@@ -12,6 +12,6 @@ public class ClientDTO {
   private String name;
   private LocalDateTime checkInTime;
   private LocalDateTime checkOutTime;
-  private ClientOrder order;
-  private ClientTable clientTable;
+  private ClientOrderDTO orderDTO;
+  private ClientTableDTO clientTableDTO;
 }

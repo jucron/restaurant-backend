@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ConsumptionListDTO {
-  Client client;
-  List<Meal> meals;
-  List<Beverage> beverages;
+  ClientDTO clientDTO;
+  List<MealDTO> meals;
+  List<BeverageDTO> beverages;
   double totalCost;
 }

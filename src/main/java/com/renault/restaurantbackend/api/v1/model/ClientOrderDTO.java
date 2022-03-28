@@ -12,6 +12,6 @@ public class ClientOrderDTO {
   private Long id;
   private LocalDateTime lastUpdated;
   private Status status;
-  private Cook cook;
-  private Waiter waiter;
+  private CookDTO cookDTO;
+  private WaiterDTO waiterDTO;
 }

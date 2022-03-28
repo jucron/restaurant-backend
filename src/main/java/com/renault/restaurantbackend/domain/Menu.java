@@ -18,7 +18,9 @@ public class Menu {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(unique = true)
   private String name;
+
   private LocalDateTime lastUpdated;
 
 }

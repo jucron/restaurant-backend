@@ -26,6 +26,6 @@ class ClientTableMapperTest {
     assertEquals(tableId,clientTableDTO.getId());
     assertEquals(tableNumber,clientTableDTO.getNumber());
     assertEquals(Status.OPEN,clientTableDTO.getStatus());
-    assertNotNull(clientTableDTO.getWaiter());
+    assertNotNull(clientTableDTO.getWaiterDTO());
   }
 }

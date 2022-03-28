@@ -9,5 +9,5 @@ public class ClientTableDTO {
   private Long id;
   private int number;
   private Status status;
-  private Waiter waiter;
+  private WaiterDTO waiterDTO;
 }

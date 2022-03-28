@@ -3,7 +3,10 @@ package com.renault.restaurantbackend.controllers;
 import com.renault.restaurantbackend.api.v1.mapper.AbstractRestControllerTest;
 import com.renault.restaurantbackend.api.v1.model.ClientDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
+import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
+import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
 import com.renault.restaurantbackend.api.v1.model.ConsumptionListDTO;
+import com.renault.restaurantbackend.api.v1.model.MealDTO;
 import com.renault.restaurantbackend.controllers.forms.ClientNameAndTableNumberForm;
 import com.renault.restaurantbackend.domain.Beverage;
 import com.renault.restaurantbackend.domain.Client;
@@ -91,9 +94,9 @@ class ClientControllerTest extends AbstractRestControllerTest {
     String clientExampleName = CLIENT_EXAMPLE_NAME;
     int tableNumber = 1;
     ClientDTO clientDTO = new ClientDTO(); clientDTO.setName(clientExampleName); clientDTO.setCheckInTime(LocalDateTime.now());
-    ClientTable table = new ClientTable(); table.setNumber(tableNumber); table.setStatus(OPEN);
-    ClientOrder order = new ClientOrder(); order.setStatus(OPEN);
-    clientDTO.setOrder(order); clientDTO.setClientTable(table);
+    ClientTableDTO tableDTO = new ClientTableDTO(); tableDTO.setNumber(tableNumber); tableDTO.setStatus(OPEN);
+    ClientOrderDTO orderDTO = new ClientOrderDTO(); orderDTO.setStatus(OPEN);
+    clientDTO.setOrderDTO(orderDTO); clientDTO.setClientTableDTO(tableDTO);
 
     given(clientService.createClient(clientExampleName, tableNumber)).willReturn(clientDTO);
     //when and then
@@ -119,8 +122,8 @@ class ClientControllerTest extends AbstractRestControllerTest {
 
     ClientDTO clientDTO = new ClientDTO();clientDTO.setName(clientExampleName);
     clientDTO.setCheckOutTime(LocalDateTime.now());
-    clientDTO.setClientTable(new ClientTable()); clientDTO.getClientTable().setStatus(CLOSED);
-    clientDTO.setOrder(new ClientOrder()); clientDTO.getOrder().setStatus(CLOSED);
+    clientDTO.setClientTableDTO(new ClientTableDTO()); clientDTO.getClientTableDTO().setStatus(CLOSED);
+    clientDTO.setOrderDTO(new ClientOrderDTO()); clientDTO.getOrderDTO().setStatus(CLOSED);
 
     given(clientService.checkoutClient(clientExampleName, tableNumber)).willReturn(clientDTO);
 
@@ -140,17 +143,17 @@ class ClientControllerTest extends AbstractRestControllerTest {
   void billViewByActiveTableAndClientAndOrder_returnsListOfConsumption() throws Exception {
     //given
     double meal_value = 10.05; double beverage_value = 5.45;
-    Meal meal1 = new Meal();meal1.setMeal(MEAL_EXAMPLE); meal1.setValue(meal_value);
+    MealDTO mealDTO = new Meal();mealDTO.setMeal(MEAL_EXAMPLE); mealDTO.setValue(meal_value);
     Beverage beverage1 = new Beverage(); beverage1.setBeverage(BEVERAGE_EXAMPLE); beverage1.setValue(beverage_value);
-    ClientOrder order1 = new ClientOrder(); order1.setStatus(OPEN);
-    meal1.setOrder(new HashSet<>(Set.of(order1))); beverage1.setOrder((new HashSet<>(Set.of(order1))));
-    Client client = new Client(); client.setOrder(order1); client.setName(CLIENT_EXAMPLE_NAME);
+    ClientOrderDTO orderDTO = new ClientOrder(); orderDTO.setStatus(OPEN);
+    mealDTO.setOrder(new HashSet<>(Set.of(orderDTO))); beverage1.setOrder((new HashSet<>(Set.of(orderDTO))));
+    ClientDTO clientDTO = new ClientDTO(); clientDTO.setOrderDTO(orderDTO); clientDTO.setName(CLIENT_EXAMPLE_NAME);
 
     ClientNameAndTableNumberForm form = new ClientNameAndTableNumberForm(
         CLIENT_EXAMPLE_NAME,1);
 
     given(clientService.getListOfConsumption(CLIENT_EXAMPLE_NAME, 1))
-        .willReturn(new ConsumptionListDTO(client,new ArrayList<>(List.of(meal1)),
+        .willReturn(new ConsumptionListDTO(clientDTO,new ArrayList<>(List.of(mealDTO)),
             new ArrayList<>(List.of(beverage1)), meal_value+beverage_value));
 
     //when and then

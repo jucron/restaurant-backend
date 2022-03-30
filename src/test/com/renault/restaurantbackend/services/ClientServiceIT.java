@@ -13,7 +13,6 @@ import com.renault.restaurantbackend.repositories.OrderRepository;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -81,11 +80,10 @@ Testing repository fetch methods
       Meal meal2 = new Meal();meal2.setMeal(MEAL_EXAMPLE_2); meal2.setValue(meal_value/2);
       Beverage beverage1 = new Beverage(); beverage1.setBeverage(BEVERAGE_EXAMPLE_1); beverage1.setValue(beverage_value);
       Beverage beverage2 = new Beverage(); beverage2.setBeverage(BEVERAGE_EXAMPLE_2); beverage2.setValue(beverage_value/2);
-      //associate meals and beverages with Order
-      meal1.setOrders(new HashSet<>(Set.of(order1))); meal2.setOrders(new HashSet<>(Set.of(order1)));
-      beverage1.setOrders((new HashSet<>(Set.of(order1)))); beverage2.setOrders((new HashSet<>(Set.of(order1))));
       mealRepository.saveAll(List.of(meal1,meal2)); beverageRepository.saveAll(List.of(beverage1,beverage2));
-
+      //associate meals and beverages with Order
+      order1.setMeals(new HashSet<>(List.of(meal1,meal2))); order1.setBeverages(new HashSet<>(List.of(beverage1,beverage2)));
+      orderRepository.save(order1);
     }
   }
   @Test
@@ -120,28 +118,6 @@ Testing repository fetch methods
     assertNotNull(clientFetched.getId());
     assertEquals(CLIENT_NAME_1,clientFetched.getName());
     assertEquals(CLIENT_TABLE_NUMBER_1,clientTable.getNumber());
-  }
-  @Test
-  void findAllMealsByOrderId() {
-    //given
-    long orderId = 1L;
-    //when
-    List<Meal> meals = mealRepository.findAllByOrdersId(orderId);
-    //then
-    assertEquals(2,meals.size());
-    assertEquals(1,meals.get(0).getOrders().size());
-    assertEquals(OPEN,meals.get(0).getOrders().iterator().next().getStatus());
-  }
-  @Test
-  void findAllBeveragesByOrderId() {
-    //given
-    long orderId = 1L;
-    //when
-    List<Beverage> beverages = beverageRepository.findAllByOrdersId(orderId);
-    //then
-    assertEquals(2,beverages.size());
-    assertEquals(1,beverages.get(0).getOrders().size());
-    assertEquals(OPEN,beverages.get(0).getOrders().iterator().next().getStatus());
   }
   @Test
   void findClientById() {

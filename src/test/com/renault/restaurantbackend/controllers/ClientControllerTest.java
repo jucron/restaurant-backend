@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -112,7 +111,6 @@ class ClientControllerTest extends AbstractRestControllerTest {
     ClientNameAndTableNumberForm form = new ClientNameAndTableNumberForm(
         clientExampleName,tableNumber);
 
-
     ClientDTO clientDTO = new ClientDTO();clientDTO.setName(clientExampleName);
     clientDTO.setCheckOutTime(LocalDateTime.now());
     clientDTO.setTableDTO(new ClientTableDTO()); clientDTO.getTableDTO().setStatus(CLOSED);
@@ -137,17 +135,22 @@ class ClientControllerTest extends AbstractRestControllerTest {
     //given
     double meal_value = 10.05; double beverage_value = 5.45;
     MealDTO mealDTO = new MealDTO();mealDTO.setMeal(MEAL_EXAMPLE); mealDTO.setValue(meal_value);
-    BeverageDTO beverage1 = new BeverageDTO(); beverage1.setBeverage(BEVERAGE_EXAMPLE); beverage1.setValue(beverage_value);
+    BeverageDTO beverageDTO = new BeverageDTO(); beverageDTO.setBeverage(BEVERAGE_EXAMPLE); beverageDTO.setValue(beverage_value);
     ClientOrderDTO orderDTO = new ClientOrderDTO(); orderDTO.setStatus(OPEN);
-    mealDTO.setOrdersDTO(new HashSet<>(Set.of(orderDTO))); beverage1.setOrdersDTO((new HashSet<>(Set.of(orderDTO))));
+    orderDTO.setMealDTOS(new HashSet<>(List.of(mealDTO))); orderDTO.setBeverageDTOS(new HashSet<>(List.of(beverageDTO)));
+
+    //mealDTO.setOrdersDTO(new HashSet<>(Set.of(orderDTO))); beverageDTO.setOrdersDTO((new HashSet<>(Set.of(orderDTO))));
     ClientDTO clientDTO = new ClientDTO(); clientDTO.setOrderDTO(orderDTO); clientDTO.setName(CLIENT_EXAMPLE_NAME);
 
     ClientNameAndTableNumberForm form = new ClientNameAndTableNumberForm(
         CLIENT_EXAMPLE_NAME,1);
 
     given(clientService.getListOfConsumption(CLIENT_EXAMPLE_NAME, 1))
-        .willReturn(new ConsumptionListDTO(clientDTO,new ArrayList<>(List.of(mealDTO)),
-            new ArrayList<>(List.of(beverage1)), meal_value+beverage_value));
+        .willReturn(new ConsumptionListDTO()
+            .withClientDTO(clientDTO)
+            .withMealDTOS(new ArrayList<>(List.of(mealDTO)))
+            .withBeverageDTOS(new ArrayList<>(List.of(beverageDTO)))
+            .withTotalCost(meal_value+beverage_value));
 
     //when and then
     mockMvc.perform(get(BASE_URL + "/consumption")
@@ -157,8 +160,8 @@ class ClientControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isOk())
         .andExpect(jsonPath("$.clientDTO.name", equalTo(CLIENT_EXAMPLE_NAME)))
         .andExpect(jsonPath("$.clientDTO.orderDTO.status", equalTo(OPEN.toString())))
-        .andExpect(jsonPath("$.mealsDTO[0].meal", equalTo(MEAL_EXAMPLE)))
-        .andExpect(jsonPath("$.beveragesDTO[0].beverage", equalTo(BEVERAGE_EXAMPLE)))
+        .andExpect(jsonPath("$.mealDTOS[0].meal", equalTo(MEAL_EXAMPLE)))
+        .andExpect(jsonPath("$.beverageDTOS[0].beverage", equalTo(BEVERAGE_EXAMPLE)))
         .andExpect(jsonPath("$.totalCost", equalTo(meal_value+beverage_value)));
   }
 }

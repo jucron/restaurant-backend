@@ -20,9 +20,10 @@ import com.renault.restaurantbackend.repositories.ClientRepository;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
 import com.renault.restaurantbackend.repositories.MealRepository;
 import com.renault.restaurantbackend.repositories.OrderRepository;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -36,7 +37,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -144,28 +144,28 @@ class ClientServiceImplTest {
     long order_id = 1L;
     double mealValue = 10;
     double beverageValue = 30;
-
+    //create a Client with Order and Table
     Client clientExample = new Client(); clientExample.setName(CLIENT_EXAMPLE_NAME);
     ClientTable tableExample = new ClientTable(); tableExample.setNumber(TABLE_NUMBER);
     ClientOrder order = new ClientOrder(); order.setId(order_id); order.setStatus(OPEN);
     clientExample.setTable(tableExample); clientExample.setOrder(order);
-
+    //create a ClientDTO with OrderDTO and TableDTO
     ClientDTO clientExampleDTO = new ClientDTO(); clientExampleDTO.setName(CLIENT_EXAMPLE_NAME);
     ClientTableDTO tableExampleDTO = new ClientTableDTO(); tableExampleDTO.setNumber(TABLE_NUMBER);
     ClientOrderDTO orderDTO = new ClientOrderDTO(); orderDTO.setId(order_id); orderDTO.setStatus(OPEN);
     clientExampleDTO.setTableDTO(tableExampleDTO);  clientExampleDTO.setOrderDTO(orderDTO);
-
-    List<Meal> meals = new ArrayList<>(List.of(new Meal()));
+    //create list of Meals and Beverages of the Order
+    Set<Meal> meals = new HashSet<>(List.of(new Meal()));
     MealDTO mealDTOWithValue = new MealDTO(); mealDTOWithValue.setValue(mealValue);
-    List<Beverage> beverages = new ArrayList<>(List.of(new Beverage()));
+    Set<Beverage> beverages = new HashSet<>(List.of(new Beverage()));
     BeverageDTO beverageDTOWithValue = new BeverageDTO(); beverageDTOWithValue.setValue(beverageValue);
+    order.setMeals(meals); order.setBeverages(beverages);
 
     given(clientTableRepository.findByNumberAndStatus(TABLE_NUMBER,OPEN)).willReturn(tableExample);
     given(clientRepository.findByNameAndTableAndCheckOutTime(
         CLIENT_EXAMPLE_NAME,tableExample,null)).willReturn(clientExample);
     given(clientMapper.clientToClientDTO(clientExample)).willReturn(clientExampleDTO);
-    given(mealRepository.findAllByOrdersId(order_id)).willReturn(meals);
-    given(beverageRepository.findAllByOrdersId(order_id)).willReturn(beverages);
+
     given(mealMapper.MealToMealDTO(any(Meal.class))).willReturn(mealDTOWithValue);
     given(beverageMapper.beverageToBeverageDTO(any(Beverage.class))).willReturn(beverageDTOWithValue);
     //when
@@ -175,15 +175,13 @@ class ClientServiceImplTest {
     verify(clientTableRepository).findByNumberAndStatus(anyInt(),any());
     verify(clientRepository).findByNameAndTableAndCheckOutTime(any(),any(),any());
     verify(clientMapper).clientToClientDTO(any());
-    verify(mealRepository).findAllByOrdersId(anyLong());
-    verify(beverageRepository).findAllByOrdersId(anyLong());
     verify(mealMapper).MealToMealDTO(any());
     verify(beverageMapper).beverageToBeverageDTO(any());
 
     assertEquals(CLIENT_EXAMPLE_NAME,consumptionListDTO.getClientDTO().getName());
     assertEquals(TABLE_NUMBER,consumptionListDTO.getClientDTO().getTableDTO().getNumber());
-    assertEquals(1,consumptionListDTO.getMealsDTO().size());
-    assertEquals(1,consumptionListDTO.getBeveragesDTO().size());
+    assertEquals(1,consumptionListDTO.getMealDTOS().size());
+    assertEquals(1,consumptionListDTO.getBeverageDTOS().size());
     assertEquals((mealValue+beverageValue),consumptionListDTO.getTotalCost());
   }
 }

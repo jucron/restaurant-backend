@@ -39,13 +39,15 @@ Check the Swagger Api Documentation: [_work in progress_]
 Note: Table status is managed by Client check-in/out
 ### Menu management _(work in progress)_
 * Create a new Menu with a name (for example: "dinner menu") 
+* View list of Menu's
+* Fetch a Menu by its name
 
 Note: Menu will hold the time registry in which the last Meal/Beverage was created
 ### Meals and Beverages management _(work in progress)_
 * Create a Meal/Beverage and associate it with an existing Menu
-* Take Client's Order by assigning a Meal/Beverage from an existing Menu
+* Take Client's Order: assigning a Meal/Beverage to An Order from an existing Menu
 * Remove a Meal/Beverage from an Order
-* Delete a a Meal/Beverage
+* Delete a Meal/Beverage, also removing its Menu's reference
 ### Workers management _(work in progress)_
 * Create a worker, with type (Waiter, Cook, etc.), and associate with a Login account
 * Deactivate a worker

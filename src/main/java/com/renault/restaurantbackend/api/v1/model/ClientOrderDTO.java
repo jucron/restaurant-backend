@@ -1,10 +1,8 @@
 package com.renault.restaurantbackend.api.v1.model;
 
-import com.renault.restaurantbackend.domain.Cook;
 import com.renault.restaurantbackend.domain.Status;
-import com.renault.restaurantbackend.domain.Waiter;
-import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.Data;
 
 @Data
@@ -14,4 +12,6 @@ public class ClientOrderDTO {
   private Status status;
   private CookDTO cookDTO;
   private WaiterDTO waiterDTO;
+  private Set<MealDTO> mealDTOS;
+  private Set<BeverageDTO> beverageDTOS;
 }

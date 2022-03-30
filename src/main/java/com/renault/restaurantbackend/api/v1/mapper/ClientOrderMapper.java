@@ -11,8 +11,9 @@ public interface ClientOrderMapper {
 
   ClientOrderMapper INSTANCE = Mappers.getMapper(ClientOrderMapper.class);
 
-  @Mapping(source = "id", target = "id")
   @Mapping(source = "cook", target = "cookDTO")
   @Mapping(source = "waiter", target = "waiterDTO")
+  @Mapping(source = "meals", target = "mealDTOS")
+  @Mapping(source = "beverages", target = "beverageDTOS")
   ClientOrderDTO clientOrderToClientOrderDTO(ClientOrder order);
 }

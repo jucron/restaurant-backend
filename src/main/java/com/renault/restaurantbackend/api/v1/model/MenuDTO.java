@@ -10,4 +10,6 @@ public class MenuDTO {
   private Long id;
   private String name;
   private LocalDateTime lastUpdated;
+  private Set<MealDTO> mealDTOS;
+  private Set<BeverageDTO> beverageDTOS;
 }

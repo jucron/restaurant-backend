@@ -12,7 +12,5 @@ public interface MealMapper {
   MealMapper INSTANCE = Mappers.getMapper(MealMapper.class);
 
   @Mapping(source = "meal", target = "meal")
-  @Mapping(source = "orders", target = "ordersDTO")
-  @Mapping(source = "menus", target = "menusDTO")
   MealDTO MealToMealDTO(Meal meal);
 }

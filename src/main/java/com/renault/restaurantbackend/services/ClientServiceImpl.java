@@ -101,12 +101,12 @@ public class ClientServiceImpl implements ClientService {
     ClientOrder order = clientFetched.getOrder();
     if (order.getStatus()== CLOSED) { return null; }
     //add meals and beverages associated with this order
-    List<MealDTO> mealsDTO = this.convertMealListToMealDTOList(order.getId());
-    List<BeverageDTO> beveragesDTO = this.convertBeverageListToBeverageDTOList(order.getId());
+    List<MealDTO> mealsDTO = this.convertMealListToMealDTOList(order);
+    List<BeverageDTO> beveragesDTO = this.convertBeverageListToBeverageDTOList(order);
     //Creating a ConsumptionList and adding all values fetched
     ConsumptionListDTO consumptionListDTO = new ConsumptionListDTO();
     consumptionListDTO.setClientDTO(clientMapper.clientToClientDTO(clientFetched));
-    consumptionListDTO.setMealsDTO(mealsDTO); consumptionListDTO.setBeveragesDTO(beveragesDTO);
+    consumptionListDTO.setMealDTOS(mealsDTO); consumptionListDTO.setBeverageDTOS(beveragesDTO);
     consumptionListDTO.setTotalCost(calculateMealTotal(mealsDTO)+calculateBeverageTotal(beveragesDTO));
     return consumptionListDTO;
   }
@@ -124,19 +124,19 @@ public class ClientServiceImpl implements ClientService {
     }
     return totalCost;
   }
-  private List<MealDTO> convertMealListToMealDTOList(long orderId) {
-    List<Meal> meals = new ArrayList<>(mealRepository.findAllByOrdersId(orderId));
+  private List<MealDTO> convertMealListToMealDTOList(ClientOrder order) {
+    List<Meal> meals = new ArrayList<>(order.getMeals());;
     List<MealDTO> mealsDTO = new ArrayList<>();
       for (Meal meal : meals) {
         mealsDTO.add(mealMapper.MealToMealDTO(meal));
       }
       return mealsDTO;
   }
-  private List<BeverageDTO> convertBeverageListToBeverageDTOList(long orderId) {
-    List<Beverage> beverages = new ArrayList<>(beverageRepository.findAllByOrdersId(orderId));
+  private List<BeverageDTO> convertBeverageListToBeverageDTOList(ClientOrder order) {
+    List<Beverage> beverages = new ArrayList<>(order.getBeverages());
     List<BeverageDTO> beveragesDTO = new ArrayList<>();
     for (Beverage beverage : beverages) {
-      beveragesDTO.add(beverageMapper.beverageToBeverageDTO(beverage)); //todo
+      beveragesDTO.add(beverageMapper.beverageToBeverageDTO(beverage));
     }
     return beveragesDTO;
   }

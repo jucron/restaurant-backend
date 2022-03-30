@@ -12,8 +12,6 @@ public interface BeverageMapper {
   BeverageMapper INSTANCE = Mappers.getMapper(BeverageMapper.class);
 
   @Mapping(source = "beverage", target = "beverage")
-  @Mapping(source = "orders", target = "ordersDTO")
-  @Mapping(source = "menus", target = "menusDTO")
   BeverageDTO beverageToBeverageDTO(Beverage beverage);
 
 }

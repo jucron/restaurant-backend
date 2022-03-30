@@ -1,3 +1,4 @@
+com\renault\restaurantbackend\controllers\WaiterController.class
 com\renault\restaurantbackend\domain\Status.class
 com\renault\restaurantbackend\api\v1\model\BeverageDTO.class
 com\renault\restaurantbackend\api\v1\mapper\CookMapperImpl.class
@@ -10,6 +11,7 @@ com\renault\restaurantbackend\domain\ClientTable.class
 com\renault\restaurantbackend\api\v1\model\MenuDTO.class
 com\renault\restaurantbackend\controllers\MealController.class
 com\renault\restaurantbackend\repositories\MenuRepository.class
+com\renault\restaurantbackend\services\MealServiceImpl.class
 com\renault\restaurantbackend\api\v1\mapper\ClientMapperImpl.class
 com\renault\restaurantbackend\domain\ClientOrder.class
 com\renault\restaurantbackend\config\security\SecurityConfig.class
@@ -34,6 +36,7 @@ com\renault\restaurantbackend\domain\Cook.class
 com\renault\restaurantbackend\services\TableServiceImpl.class
 com\renault\restaurantbackend\api\v1\mapper\ClientMapper.class
 com\renault\restaurantbackend\api\v1\mapper\CookMapper.class
+com\renault\restaurantbackend\controllers\MenuController.class
 com\renault\restaurantbackend\controllers\ClientController.class
 com\renault\restaurantbackend\api\v1\mapper\MealMapper.class
 com\renault\restaurantbackend\api\v1\mapper\WaiterMapper.class
@@ -57,7 +60,6 @@ com\renault\restaurantbackend\api\v1\mapper\MealMapperImpl.class
 com\renault\restaurantbackend\api\v1\mapper\ClientTableMapperImpl.class
 com\renault\restaurantbackend\api\v1\mapper\MenuMapperImpl.class
 com\renault\restaurantbackend\services\MealService.class
-com\renault\restaurantbackend\api\v1\model\ConsumptionListDTO$ConsumptionListDTOBuilder.class
 com\renault\restaurantbackend\services\ClientServiceImpl.class
 com\renault\restaurantbackend\config\security\DisableSecurity.class
 com\renault\restaurantbackend\controllers\TableController.class
@@ -66,3 +68,4 @@ com\renault\restaurantbackend\services\BeverageService.class
 com\renault\restaurantbackend\api\v1\model\CookDTO.class
 com\renault\restaurantbackend\repositories\CookRepository.class
 com\renault\restaurantbackend\api\v1\model\LoginStaffDTO.class
+com\renault\restaurantbackend\controllers\CookController.class

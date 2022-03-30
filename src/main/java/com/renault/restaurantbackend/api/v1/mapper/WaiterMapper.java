@@ -11,7 +11,6 @@ public interface WaiterMapper {
 
   WaiterMapper INSTANCE = Mappers.getMapper(WaiterMapper.class);
 
-  @Mapping(source = "id", target = "id")
   @Mapping(source = "login", target = "loginDTO")
   WaiterDTO WaiterToWaiterDTO(Waiter waiter);
 }

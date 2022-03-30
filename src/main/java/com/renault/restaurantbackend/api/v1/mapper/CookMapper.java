@@ -11,7 +11,6 @@ public interface CookMapper {
 
   CookMapper INSTANCE = Mappers.getMapper(CookMapper.class);
 
-  @Mapping(source = "id", target = "id")
   @Mapping(source = "login", target = "loginDTO")
   CookDTO CookToCookDTO(Cook cook);
 }

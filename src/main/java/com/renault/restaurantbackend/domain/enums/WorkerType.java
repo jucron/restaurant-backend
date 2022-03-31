@@ -1,4 +1,4 @@
-package com.renault.restaurantbackend.domain;
+package com.renault.restaurantbackend.domain.enums;
 
 public enum WorkerType {
   WAITER,

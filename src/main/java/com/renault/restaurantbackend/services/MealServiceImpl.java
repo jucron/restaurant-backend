@@ -1,6 +1,6 @@
 package com.renault.restaurantbackend.services;
 
-import com.renault.restaurantbackend.api.v1.model.MealDTO;
+import com.renault.restaurantbackend.api.v1.model.ConsumableDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ public class MealServiceImpl implements MealService {
 
 
   @Override
-  public MealDTO assignMealToOrder(long orderId, String mealName) {
+  public ConsumableDTO assignMealToOrder(long orderId, String mealName) {
     return null;
   }
 }

@@ -2,8 +2,8 @@ package com.renault.restaurantbackend.api.v1.mapper;
 
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
 import com.renault.restaurantbackend.domain.ClientTable;
-import com.renault.restaurantbackend.domain.Status;
 import com.renault.restaurantbackend.domain.Waiter;
+import com.renault.restaurantbackend.domain.enums.Status;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

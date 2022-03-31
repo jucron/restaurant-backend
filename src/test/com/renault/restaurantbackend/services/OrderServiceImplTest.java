@@ -18,7 +18,8 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -59,14 +60,14 @@ class OrderServiceImplTest {
     Client client = new Client(); client.setOrder(new ClientOrder());
 
     given(clientRepository.findById(CLIENT_ID)).willReturn(Optional.of(client));
-    given(clientOrderMapper.clientOrderToClientOrderDTO(any(ClientOrder.class))).willReturn(orderDTO);
+    given(clientOrderMapper.orderToOrderDTO(any(ClientOrder.class))).willReturn(orderDTO);
 
     //when
     ClientOrderDTO fetchedOrderDTO = orderService.getOrdersByClientId(CLIENT_ID);
 
     //then
     verify(clientRepository).findById(CLIENT_ID);
-    verify(clientOrderMapper).clientOrderToClientOrderDTO(any(ClientOrder.class));
+    verify(clientOrderMapper).orderToOrderDTO(any(ClientOrder.class));
     assertNotNull(fetchedOrderDTO.getId());
   }
   @Test
@@ -75,7 +76,7 @@ class OrderServiceImplTest {
     ClientOrder order = new ClientOrder(); order.setId(ORDER_ID);
     Waiter waiter = new Waiter(); waiter.setId(WAITER_ID);
 
-    given(clientOrderMapper.clientOrderToClientOrderDTO(any(ClientOrder.class))).willReturn(new ClientOrderDTO());
+    given(clientOrderMapper.orderToOrderDTO(any(ClientOrder.class))).willReturn(new ClientOrderDTO());
     given(orderRepository.findById(ORDER_ID)).willReturn(Optional.of(order));
     given(waiterRepository.findById(WAITER_ID)).willReturn(Optional.of(waiter));
     //when
@@ -85,7 +86,7 @@ class OrderServiceImplTest {
     verify(orderRepository).findById(ORDER_ID);
     verify(waiterRepository).findById(WAITER_ID);
     verify(orderRepository).save(any());
-    verify(clientOrderMapper).clientOrderToClientOrderDTO(orderArgumentCaptor.capture());
+    verify(clientOrderMapper).orderToOrderDTO(orderArgumentCaptor.capture());
 
     ClientOrder orderCaptured = orderArgumentCaptor.getValue();
     assertEquals((int)ORDER_ID,orderCaptured.getId());
@@ -97,7 +98,7 @@ class OrderServiceImplTest {
     ClientOrder order = new ClientOrder(); order.setId(ORDER_ID);
     Cook cook = new Cook(); cook.setId(COOK_ID);
 
-    given(clientOrderMapper.clientOrderToClientOrderDTO(any(ClientOrder.class))).willReturn(new ClientOrderDTO());
+    given(clientOrderMapper.orderToOrderDTO(any(ClientOrder.class))).willReturn(new ClientOrderDTO());
     given(orderRepository.findById(ORDER_ID)).willReturn(Optional.of(order));
     given(cookRepository.findById(COOK_ID)).willReturn(Optional.of(cook));
     //when
@@ -107,7 +108,7 @@ class OrderServiceImplTest {
     verify(orderRepository).findById(ORDER_ID);
     verify(cookRepository).findById(COOK_ID);
     verify(orderRepository).save(any());
-    verify(clientOrderMapper).clientOrderToClientOrderDTO(orderArgumentCaptor.capture());
+    verify(clientOrderMapper).orderToOrderDTO(orderArgumentCaptor.capture());
 
     ClientOrder orderCaptured = orderArgumentCaptor.getValue();
     assertEquals((int)ORDER_ID,orderCaptured.getId());

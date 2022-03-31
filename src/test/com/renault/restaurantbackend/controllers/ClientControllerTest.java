@@ -1,19 +1,14 @@
 package com.renault.restaurantbackend.controllers;
 
 import com.renault.restaurantbackend.api.v1.mapper.AbstractRestControllerTest;
-import com.renault.restaurantbackend.api.v1.model.BeverageDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
-import com.renault.restaurantbackend.api.v1.model.ConsumptionListDTO;
-import com.renault.restaurantbackend.api.v1.model.MealDTO;
 import com.renault.restaurantbackend.controllers.forms.ClientNameAndTableNumberForm;
 import com.renault.restaurantbackend.services.ClientService;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,8 +19,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static com.renault.restaurantbackend.domain.Status.CLOSED;
-import static com.renault.restaurantbackend.domain.Status.OPEN;
+import static com.renault.restaurantbackend.domain.enums.Status.CLOSED;
+import static com.renault.restaurantbackend.domain.enums.Status.OPEN;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
@@ -130,38 +125,5 @@ class ClientControllerTest extends AbstractRestControllerTest {
         .andExpect(jsonPath("$.orderDTO.status", equalTo("CLOSED")))
         .andExpect(jsonPath("$.tableDTO.status", equalTo("CLOSED")));
   }
-  @Test
-  void billViewByActiveTableAndClientAndOrder_returnsListOfConsumption() throws Exception {
-    //given
-    double meal_value = 10.05; double beverage_value = 5.45;
-    MealDTO mealDTO = new MealDTO();mealDTO.setMeal(MEAL_EXAMPLE); mealDTO.setValue(meal_value);
-    BeverageDTO beverageDTO = new BeverageDTO(); beverageDTO.setBeverage(BEVERAGE_EXAMPLE); beverageDTO.setValue(beverage_value);
-    ClientOrderDTO orderDTO = new ClientOrderDTO(); orderDTO.setStatus(OPEN);
-    orderDTO.setMealDTOS(new HashSet<>(List.of(mealDTO))); orderDTO.setBeverageDTOS(new HashSet<>(List.of(beverageDTO)));
 
-    //mealDTO.setOrdersDTO(new HashSet<>(Set.of(orderDTO))); beverageDTO.setOrdersDTO((new HashSet<>(Set.of(orderDTO))));
-    ClientDTO clientDTO = new ClientDTO(); clientDTO.setOrderDTO(orderDTO); clientDTO.setName(CLIENT_EXAMPLE_NAME);
-
-    ClientNameAndTableNumberForm form = new ClientNameAndTableNumberForm(
-        CLIENT_EXAMPLE_NAME,1);
-
-    given(clientService.getListOfConsumption(CLIENT_EXAMPLE_NAME, 1))
-        .willReturn(new ConsumptionListDTO()
-            .withClientDTO(clientDTO)
-            .withMealDTOS(new ArrayList<>(List.of(mealDTO)))
-            .withBeverageDTOS(new ArrayList<>(List.of(beverageDTO)))
-            .withTotalCost(meal_value+beverage_value));
-
-    //when and then
-    mockMvc.perform(get(BASE_URL + "/consumption")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(asJsonString(form)))
-                .andExpect(status().isOk())
-        .andExpect(jsonPath("$.clientDTO.name", equalTo(CLIENT_EXAMPLE_NAME)))
-        .andExpect(jsonPath("$.clientDTO.orderDTO.status", equalTo(OPEN.toString())))
-        .andExpect(jsonPath("$.mealDTOS[0].meal", equalTo(MEAL_EXAMPLE)))
-        .andExpect(jsonPath("$.beverageDTOS[0].beverage", equalTo(BEVERAGE_EXAMPLE)))
-        .andExpect(jsonPath("$.totalCost", equalTo(meal_value+beverage_value)));
-  }
 }

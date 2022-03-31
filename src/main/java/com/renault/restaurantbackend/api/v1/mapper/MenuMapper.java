@@ -11,8 +11,7 @@ public interface MenuMapper {
 
   MenuMapper INSTANCE = Mappers.getMapper(MenuMapper.class);
 
-  @Mapping(source = "meals", target = "mealDTOS")
-  @Mapping(source = "beverages", target = "beverageDTOS")
+  @Mapping(source = "consumables", target = "consumableDTOS")
   MenuDTO MenuToMenuDTO(Menu menu);
 
 }

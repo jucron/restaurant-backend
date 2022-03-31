@@ -1,16 +1,13 @@
 package com.renault.restaurantbackend.services;
 
-import com.renault.restaurantbackend.domain.Beverage;
 import com.renault.restaurantbackend.domain.Client;
 import com.renault.restaurantbackend.domain.ClientOrder;
 import com.renault.restaurantbackend.domain.ClientTable;
-import com.renault.restaurantbackend.domain.Meal;
-import com.renault.restaurantbackend.repositories.BeverageRepository;
+import com.renault.restaurantbackend.domain.Consumable;
 import com.renault.restaurantbackend.repositories.ClientRepository;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
-import com.renault.restaurantbackend.repositories.MealRepository;
+import com.renault.restaurantbackend.repositories.ConsumableRepository;
 import com.renault.restaurantbackend.repositories.OrderRepository;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,8 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static com.renault.restaurantbackend.domain.Status.CLOSED;
-import static com.renault.restaurantbackend.domain.Status.OPEN;
+import static com.renault.restaurantbackend.domain.enums.Status.CLOSED;
+import static com.renault.restaurantbackend.domain.enums.Status.OPEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -40,9 +37,7 @@ Testing repository fetch methods
   @Autowired
   private OrderRepository orderRepository;
   @Autowired
-  private MealRepository mealRepository;
-  @Autowired
-  private BeverageRepository beverageRepository;
+  private ConsumableRepository mealRepository;
 
   private final String CLIENT_NAME_1 = "clientName1";
   private final String CLIENT_NAME_2 = "clientName2";
@@ -76,13 +71,14 @@ Testing repository fetch methods
       clientExample1.setOrder(order1); clientRepository.save(clientExample1);
       //create meals and beverages
       double meal_value = 10.05; double beverage_value = 5.45;
-      Meal meal1 = new Meal();meal1.setMeal(MEAL_EXAMPLE_1); meal1.setValue(meal_value);
-      Meal meal2 = new Meal();meal2.setMeal(MEAL_EXAMPLE_2); meal2.setValue(meal_value/2);
-      Beverage beverage1 = new Beverage(); beverage1.setBeverage(BEVERAGE_EXAMPLE_1); beverage1.setValue(beverage_value);
-      Beverage beverage2 = new Beverage(); beverage2.setBeverage(BEVERAGE_EXAMPLE_2); beverage2.setValue(beverage_value/2);
-      mealRepository.saveAll(List.of(meal1,meal2)); beverageRepository.saveAll(List.of(beverage1,beverage2));
+      Consumable consumable1 = new Consumable();
+      consumable1.setConsumable(MEAL_EXAMPLE_1); consumable1.setValue(meal_value);
+      Consumable consumable2 = new Consumable();
+      consumable2.setConsumable(MEAL_EXAMPLE_2); consumable2.setValue(meal_value/2);
+
+      mealRepository.saveAll(List.of(consumable1, consumable2));
       //associate meals and beverages with Order
-      order1.setMeals(new HashSet<>(List.of(meal1,meal2))); order1.setBeverages(new HashSet<>(List.of(beverage1,beverage2)));
+      //order1.setMeals(new HashSet<>(List.of(meal1,meal2))); order1.setBeverages(new HashSet<>(List.of(beverage1,beverage2)));
       orderRepository.save(order1);
     }
   }

@@ -26,15 +26,8 @@ public class Menu {
   private LocalDateTime lastUpdated;
 
   @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(name = "rt_menu_meal",
+  @JoinTable(name = "rt_menu_consumable",
       joinColumns = @JoinColumn(name = "menu_id"),
-      inverseJoinColumns = @JoinColumn(name = "meal_id"))
-  private Set<Meal> meals;
-
-  @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(name = "rt_menu_beverage",
-      joinColumns = @JoinColumn(name = "menu_id"),
-      inverseJoinColumns = @JoinColumn(name = "beverage_id"))
-  private Set<Beverage> beverages;
-
+      inverseJoinColumns = @JoinColumn(name = "consumable_id"))
+  private Set<Consumable> consumables;
 }

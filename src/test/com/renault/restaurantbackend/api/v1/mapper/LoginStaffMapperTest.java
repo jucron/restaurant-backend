@@ -2,7 +2,7 @@ package com.renault.restaurantbackend.api.v1.mapper;
 
 import com.renault.restaurantbackend.api.v1.model.LoginStaffDTO;
 import com.renault.restaurantbackend.domain.LoginStaff;
-import com.renault.restaurantbackend.domain.WorkerType;
+import com.renault.restaurantbackend.domain.enums.WorkerType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

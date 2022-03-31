@@ -12,7 +12,6 @@ import lombok.With;
 @With
 public class ConsumptionListDTO {
   ClientDTO clientDTO;
-  List<MealDTO> mealDTOS;
-  List<BeverageDTO> beverageDTOS;
+  List<ConsumableDTO> consumableDTOS;
   double totalCost;
 }

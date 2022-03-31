@@ -1,22 +1,15 @@
 package com.renault.restaurantbackend.services;
 
-import com.renault.restaurantbackend.api.v1.mapper.BeverageMapper;
 import com.renault.restaurantbackend.api.v1.mapper.ClientMapper;
-import com.renault.restaurantbackend.api.v1.mapper.MealMapper;
-import com.renault.restaurantbackend.api.v1.model.BeverageDTO;
+import com.renault.restaurantbackend.api.v1.mapper.ConsumableMapper;
 import com.renault.restaurantbackend.api.v1.model.ClientDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
-import com.renault.restaurantbackend.api.v1.model.ConsumptionListDTO;
-import com.renault.restaurantbackend.api.v1.model.MealDTO;
-import com.renault.restaurantbackend.domain.Beverage;
 import com.renault.restaurantbackend.domain.Client;
 import com.renault.restaurantbackend.domain.ClientOrder;
 import com.renault.restaurantbackend.domain.ClientTable;
-import com.renault.restaurantbackend.domain.Meal;
-import com.renault.restaurantbackend.repositories.BeverageRepository;
 import com.renault.restaurantbackend.repositories.ClientRepository;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
-import com.renault.restaurantbackend.repositories.MealRepository;
+import com.renault.restaurantbackend.repositories.ConsumableRepository;
 import com.renault.restaurantbackend.repositories.OrderRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,8 +17,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.renault.restaurantbackend.domain.Status.CLOSED;
-import static com.renault.restaurantbackend.domain.Status.OPEN;
+import static com.renault.restaurantbackend.domain.enums.Status.CLOSED;
+import static com.renault.restaurantbackend.domain.enums.Status.OPEN;
 
 @Service
 @RequiredArgsConstructor
@@ -33,11 +26,9 @@ public class ClientServiceImpl implements ClientService {
   private final ClientMapper clientMapper;
   private final ClientRepository clientRepository;
   private final ClientTableRepository clientTableRepository;
-  private final MealRepository mealRepository;
-  private final BeverageRepository beverageRepository;
+  private final ConsumableRepository mealRepository;
   private final OrderRepository orderRepository;
-  private final MealMapper mealMapper;
-  private final BeverageMapper beverageMapper;
+  private final ConsumableMapper mealMapper;
 
   @Override
   public ClientListDTO getAllClients() {
@@ -88,56 +79,5 @@ public class ClientServiceImpl implements ClientService {
     clientTableRepository.save(table); orderRepository.save(order);
 
     return clientMapper.clientToClientDTO(clientFetched);
-  }
-
-  @Override
-  public ConsumptionListDTO getListOfConsumption(String clientName, int tableNumber) {
-    //fetching client by parameters
-    ClientTable clientTable = clientTableRepository.findByNumberAndStatus(tableNumber,OPEN);
-    Client clientFetched = clientRepository.findByNameAndTableAndCheckOutTime(
-        clientName,clientTable,null);
-    //validation of query: client not found or order closed
-    if (clientFetched == null) { return null; }
-    ClientOrder order = clientFetched.getOrder();
-    if (order.getStatus()== CLOSED) { return null; }
-    //add meals and beverages associated with this order
-    List<MealDTO> mealsDTO = this.convertMealListToMealDTOList(order);
-    List<BeverageDTO> beveragesDTO = this.convertBeverageListToBeverageDTOList(order);
-    //Creating a ConsumptionList and adding all values fetched
-    ConsumptionListDTO consumptionListDTO = new ConsumptionListDTO();
-    consumptionListDTO.setClientDTO(clientMapper.clientToClientDTO(clientFetched));
-    consumptionListDTO.setMealDTOS(mealsDTO); consumptionListDTO.setBeverageDTOS(beveragesDTO);
-    consumptionListDTO.setTotalCost(calculateMealTotal(mealsDTO)+calculateBeverageTotal(beveragesDTO));
-    return consumptionListDTO;
-  }
-  private double calculateMealTotal(List<MealDTO> list) {
-    double totalCost = 0;
-    for (MealDTO item : list) {
-      totalCost=+item.getValue();
-    }
-    return totalCost;
-  }
-  private double calculateBeverageTotal(List<BeverageDTO> list) {
-    double totalCost = 0;
-    for (BeverageDTO item : list) {
-      totalCost=+item.getValue();
-    }
-    return totalCost;
-  }
-  private List<MealDTO> convertMealListToMealDTOList(ClientOrder order) {
-    List<Meal> meals = new ArrayList<>(order.getMeals());;
-    List<MealDTO> mealsDTO = new ArrayList<>();
-      for (Meal meal : meals) {
-        mealsDTO.add(mealMapper.MealToMealDTO(meal));
-      }
-      return mealsDTO;
-  }
-  private List<BeverageDTO> convertBeverageListToBeverageDTOList(ClientOrder order) {
-    List<Beverage> beverages = new ArrayList<>(order.getBeverages());
-    List<BeverageDTO> beveragesDTO = new ArrayList<>();
-    for (Beverage beverage : beverages) {
-      beveragesDTO.add(beverageMapper.beverageToBeverageDTO(beverage));
-    }
-    return beveragesDTO;
   }
 }

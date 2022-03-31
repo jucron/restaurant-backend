@@ -1,6 +1,6 @@
 package com.renault.restaurantbackend.domain;
 
-import javax.persistence.Column;
+import com.renault.restaurantbackend.domain.enums.WorkerType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;

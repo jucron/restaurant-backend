@@ -1,6 +1,6 @@
 package com.renault.restaurantbackend.controllers;
 
-import com.renault.restaurantbackend.api.v1.model.MealDTO;
+import com.renault.restaurantbackend.api.v1.model.ConsumableDTO;
 import com.renault.restaurantbackend.services.MealService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class MealController {
 
   @PostMapping({"/{mealName}/{orderId}/order"})
   @ResponseStatus(HttpStatus.OK)
-  public MealDTO assignMealToOrder(@PathVariable long orderId, @PathVariable String mealName) {
+  public ConsumableDTO assignMealToOrder(@PathVariable long orderId, @PathVariable String mealName) {
     return mealService.assignMealToOrder(orderId, mealName);
   }
 }

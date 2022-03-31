@@ -4,7 +4,7 @@ import com.renault.restaurantbackend.api.v1.model.ClientDTO;
 import com.renault.restaurantbackend.domain.Client;
 import com.renault.restaurantbackend.domain.ClientOrder;
 import com.renault.restaurantbackend.domain.ClientTable;
-import com.renault.restaurantbackend.domain.Status;
+import com.renault.restaurantbackend.domain.enums.Status;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 

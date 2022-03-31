@@ -13,7 +13,6 @@ import com.renault.restaurantbackend.repositories.WaiterRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +29,7 @@ public class OrderServiceImpl implements OrderService {
     Optional<Client> clientOptional = clientRepository.findById(clientId);
     if (clientOptional.isEmpty()) {return null;}
     ClientOrder fetchOrder = clientOptional.get().getOrder();
-    return clientOrderMapper.clientOrderToClientOrderDTO(fetchOrder);
+    return clientOrderMapper.orderToOrderDTO(fetchOrder);
   }
 
   @Override public ClientOrderDTO assignWaiterToOrder(long orderId, long waiterId) {
@@ -39,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
     if (orderOptional.isEmpty() || waiterOptional.isEmpty()) {return null;}
     orderOptional.get().setWaiter(waiterOptional.get());
     orderRepository.save(orderOptional.get());
-    return clientOrderMapper.clientOrderToClientOrderDTO(orderOptional.get());
+    return clientOrderMapper.orderToOrderDTO(orderOptional.get());
   }
 
   @Override public ClientOrderDTO assignCookToOrder(long orderId, long cookId) {
@@ -48,6 +47,6 @@ public class OrderServiceImpl implements OrderService {
     if (orderOptional.isEmpty() || cookOptional.isEmpty()) {return null;}
     orderOptional.get().setCook(cookOptional.get());
     orderRepository.save(orderOptional.get());
-    return clientOrderMapper.clientOrderToClientOrderDTO(orderOptional.get());
+    return clientOrderMapper.orderToOrderDTO(orderOptional.get());
   }
 }

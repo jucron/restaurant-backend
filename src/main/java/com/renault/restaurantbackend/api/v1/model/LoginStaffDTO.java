@@ -1,6 +1,6 @@
 package com.renault.restaurantbackend.api.v1.model;
 
-import com.renault.restaurantbackend.domain.WorkerType;
+import com.renault.restaurantbackend.domain.enums.WorkerType;
 import lombok.Data;
 
 @Data

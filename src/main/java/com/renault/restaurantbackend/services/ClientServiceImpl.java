@@ -31,13 +31,29 @@ public class ClientServiceImpl implements ClientService {
   private final ConsumableMapper mealMapper;
 
   @Override
-  public ClientListDTO getAllClients() {
+  public ClientListDTO getAllClientsWithStatus(String status) {
     List<Client> clientList = clientRepository.findAll();
     ClientListDTO clientListDTO = new ClientListDTO(new ArrayList<>());
-    for (Client client : clientList) {
-      clientListDTO.getClients().add(clientMapper.clientToClientDTO(client));
+    //case1: status=OPEN - get clients with null 'checkoutTime' (not left)
+    //case2: status=CLOSED - get clients with not-null 'checkoutTime' (already left)
+    //case3: status!=OPEN/CLOSED - error, return null
+    switch (status.toUpperCase()) {
+      case "OPEN": //case 1
+        for (Client client : clientList) {
+          if (client.getCheckOutTime()==null) {
+            clientListDTO.getClients().add(clientMapper.clientToClientDTO(client));
+          }
+        }
+        return clientListDTO;
+      case "CLOSED": //case 2
+        for (Client client : clientList) {
+          if (client.getCheckOutTime()!=null) {
+            clientListDTO.getClients().add(clientMapper.clientToClientDTO(client));
+          }
+        }
+        return clientListDTO;
     }
-    return clientListDTO;
+    return null; //case 3
   }
 
   @Override

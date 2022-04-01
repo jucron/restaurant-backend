@@ -8,7 +8,6 @@ import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
 import com.renault.restaurantbackend.controllers.forms.ClientNameAndTableNumberForm;
 import com.renault.restaurantbackend.services.ClientService;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,10 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class ClientControllerTest extends AbstractRestControllerTest {
   /*Expected behavior of this class:
-  1-OK: Fetch list of ClientDTO's (by waiter)
-  2-OK: Create a new Client (check-in of client, by waiter)
-  3-OK: Close account (check-out of client, by waiter)
-  4-OK: Check bill (by client)
+   * OK: View list of all clients with the chose Status (OPEN/CLOSED)
+   * OK: Check-in a new client by assigning an existing Table and a new Order
+   * OK: Check-out a Client by assigning a checkout-time and changing the Table, Order status
    */
 
   @InjectMocks
@@ -49,7 +47,8 @@ class ClientControllerTest extends AbstractRestControllerTest {
 
   private final String BASE_URL = ClientController.BASE_URL;
 
-  private final String CLIENT_EXAMPLE_NAME = "clientExampleName";
+  private final String CLIENT_EXAMPLE_1 = "clientExampleName1";
+  private final String CLIENT_EXAMPLE_2 = "clientExampleName2";
   private final String MEAL_EXAMPLE = "mealExample";
   private final String BEVERAGE_EXAMPLE = "beverageExample";
 
@@ -61,24 +60,49 @@ class ClientControllerTest extends AbstractRestControllerTest {
   }
 
   @Test
-  void getListOfClientsDTO() throws Exception {
-    //given
+  void getListOfOPENClientsDTO() throws Exception {
+    //given - Only client1 is CLOSED: Has a checkoutTime not null
+    String status = "open";
     ClientDTO clientDTO_example_1 = new ClientDTO();
-    ClientDTO clientDTO_example_2 = new ClientDTO();
-    List<ClientDTO> clients = Arrays.asList(clientDTO_example_1, clientDTO_example_2);
-    given(clientService.getAllClients()).willReturn(new ClientListDTO(clients));
+    clientDTO_example_1.setCheckOutTime(LocalDateTime.now()); clientDTO_example_1.setName(CLIENT_EXAMPLE_1);
+    ClientDTO clientDTO_example_2 = new ClientDTO(); clientDTO_example_2.setName(CLIENT_EXAMPLE_2);
+    List<ClientDTO> clientsOPEN = List.of(clientDTO_example_2); List<ClientDTO> clientsCLOSED = List.of(clientDTO_example_1);
+    given(clientService.getAllClientsWithStatus("open")).willReturn(new ClientListDTO(clientsOPEN));
+    given(clientService.getAllClientsWithStatus("closed")).willReturn(new ClientListDTO(clientsCLOSED));
 
     //when and then
-    mockMvc.perform(get(BASE_URL + "/")
+    mockMvc.perform(get(BASE_URL + "/"+status)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.clients", hasSize(2)));
+        .andExpect(jsonPath("$.clients[0].name", equalTo(CLIENT_EXAMPLE_2)))
+        .andExpect(jsonPath("$.clients[0].checkOutTime", equalTo(null)))
+        .andExpect(jsonPath("$.clients", hasSize(1)));
+  }
+  @Test
+  void getListOfCLOSEDClientsDTO() throws Exception {
+    //given - Only client1 is CLOSED: Has a checkoutTime not null
+    String status = "closed";
+    ClientDTO clientDTO_example_1 = new ClientDTO();
+    clientDTO_example_1.setCheckOutTime(LocalDateTime.now()); clientDTO_example_1.setName(CLIENT_EXAMPLE_1);
+    ClientDTO clientDTO_example_2 = new ClientDTO(); clientDTO_example_2.setName(CLIENT_EXAMPLE_2);
+    List<ClientDTO> clientsOPEN = List.of(clientDTO_example_2); List<ClientDTO> clientsCLOSED = List.of(clientDTO_example_1);
+    given(clientService.getAllClientsWithStatus("open")).willReturn(new ClientListDTO(clientsOPEN));
+    given(clientService.getAllClientsWithStatus("closed")).willReturn(new ClientListDTO(clientsCLOSED));
+
+    //when and then
+    mockMvc.perform(get(BASE_URL + "/"+status)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.clients[0].name", equalTo(CLIENT_EXAMPLE_1)))
+        .andExpect(jsonPath("$.clients[0].checkOutTime", notNullValue()))
+        .andExpect(jsonPath("$.clients", hasSize(1)));
   }
   @Test
   void createANewClientAndReturnsDTOWithOrderAndTable() throws Exception {
     //given
-    String clientExampleName = CLIENT_EXAMPLE_NAME;
+    String clientExampleName = CLIENT_EXAMPLE_1;
     int tableNumber = 1;
     ClientDTO clientDTO = new ClientDTO(); clientDTO.setName(clientExampleName); clientDTO.setCheckInTime(LocalDateTime.now());
     ClientTableDTO tableDTO = new ClientTableDTO(); tableDTO.setNumber(tableNumber); tableDTO.setStatus(OPEN);
@@ -101,7 +125,7 @@ class ClientControllerTest extends AbstractRestControllerTest {
   @Test
   void checkoutAClientByGivingClientsTableAndName() throws Exception {
     //given
-    String clientExampleName = CLIENT_EXAMPLE_NAME;
+    String clientExampleName = CLIENT_EXAMPLE_1;
     int tableNumber = 1;
     ClientNameAndTableNumberForm form = new ClientNameAndTableNumberForm(
         clientExampleName,tableNumber);
@@ -119,7 +143,7 @@ class ClientControllerTest extends AbstractRestControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(asJsonString(form)))
                 .andExpect(status().isOk())
-        .andExpect(jsonPath("$.name", equalTo(CLIENT_EXAMPLE_NAME)))
+        .andExpect(jsonPath("$.name", equalTo(CLIENT_EXAMPLE_1)))
         /** {@link clientService} must implement the following: */
         .andExpect(jsonPath("$.checkOutTime", notNullValue()))
         .andExpect(jsonPath("$.orderDTO.status", equalTo("CLOSED")))

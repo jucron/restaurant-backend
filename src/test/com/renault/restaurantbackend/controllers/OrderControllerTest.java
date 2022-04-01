@@ -23,9 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class OrderControllerTest {
   /*Expected behavior of this class:
-    1 - OK: get Order that belong to a Client
-    2 - OK: assign a Cook to an Order
-    3 - OK: assign a Waiter to an Order
+   * OK: Fetch a Client's specific Order
+   * Assign a waiter to an Order
+   * Assign a cook to an Order
    */
   private final String BASE_URL = OrderController.BASE_URL;
   private final long CLIENT_ID = 1;

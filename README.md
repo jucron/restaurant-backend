@@ -23,12 +23,13 @@ Check the Swagger Api Documentation: [_work in progress_]
 
 ## Features of this API 
 ### Client management
-* View list of all clients and their details
-* Check-in a new client by assigning a Table number and Order
-* Verify Client's Order and get the list of consumption
-* Check-out a client and leave important data for future analysis
+* View list of all clients with the chose Status (OPEN/CLOSED)
+* Check-in a new client by assigning an existing Table and a new Order
+* Check-out a Client by assigning a checkout-time and changing the Table, Order status
+
+Note about Status: OPEN is the same as Active/In_Use. CLOSED is the same as Deactivated/Not_In_Use.
 ### Order management
-* Verify active Orders so that staff can take action
+* Fetch a Client's specific Order
 * Assign a waiter to an Order
 * Assign a cook to an Order
 ### Table management 
@@ -43,10 +44,12 @@ Note: Table status is managed by Client check-in/out
 * Fetch a Menu by its name
 
 Note: Menu will hold the time registry in which the last Meal/Beverage was created
-### Meals and Beverages management _(work in progress)_
-* Create a Meal/Beverage and associate it with an existing Menu
-* Take Client's Order: assigning a Meal/Beverage to An Order from an existing Menu
-* Remove a Meal/Beverage from an Order
+### Consumption management _(work in progress)_
+* Create a Consumption for a Client's Order with quantity, Consumable 
+* Delete a Consumption previously created
+* Fetch Client's Consumption List and total value
+### Consumable management _(work in progress)_
+* Create a Consumable, with type (like Meal/Beverage), and associate it with an existing Menu
 * Delete a Meal/Beverage, also removing its Menu's reference
 ### Workers management _(work in progress)_
 * Create a worker, with type (Waiter, Cook, etc.), and associate with a Login account

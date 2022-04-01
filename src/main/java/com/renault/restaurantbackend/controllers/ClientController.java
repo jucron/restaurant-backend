@@ -22,10 +22,10 @@ public class ClientController {
   public static final String BASE_URL = "/api/v1/clients";
   private final ClientService clientService;
 
-  @GetMapping("/")
+  @GetMapping("/{status}")
   @ResponseStatus(HttpStatus.OK)
-  public ClientListDTO getClients() {
-    return clientService.getAllClients();
+  public ClientListDTO getClients(@PathVariable String status) {
+    return clientService.getAllClientsWithStatus(status);
   }
   @PostMapping({"/create/{name}/{tableNumber}"})
   @ResponseStatus(HttpStatus.CREATED)

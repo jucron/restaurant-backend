@@ -49,8 +49,6 @@ class ClientControllerTest extends AbstractRestControllerTest {
 
   private final String CLIENT_EXAMPLE_1 = "clientExampleName1";
   private final String CLIENT_EXAMPLE_2 = "clientExampleName2";
-  private final String MEAL_EXAMPLE = "mealExample";
-  private final String BEVERAGE_EXAMPLE = "beverageExample";
 
   @BeforeEach
   void setUp() {

@@ -3,7 +3,7 @@ package com.renault.restaurantbackend.services;
 import com.renault.restaurantbackend.api.v1.mapper.ClientMapper;
 import com.renault.restaurantbackend.api.v1.mapper.ConsumableMapper;
 import com.renault.restaurantbackend.api.v1.model.ClientDTO;
-import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
+import com.renault.restaurantbackend.api.v1.model.lists.ClientListDTO;
 import com.renault.restaurantbackend.domain.Client;
 import com.renault.restaurantbackend.domain.ClientOrder;
 import com.renault.restaurantbackend.domain.ClientTable;

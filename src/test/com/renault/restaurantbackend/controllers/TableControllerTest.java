@@ -1,8 +1,8 @@
 package com.renault.restaurantbackend.controllers;
 
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
-import com.renault.restaurantbackend.api.v1.model.ClientTableListDTO;
 import com.renault.restaurantbackend.api.v1.model.WaiterDTO;
+import com.renault.restaurantbackend.api.v1.model.lists.ClientTableListDTO;
 import com.renault.restaurantbackend.domain.enums.Status;
 import com.renault.restaurantbackend.services.TableService;
 import java.util.Arrays;

@@ -2,7 +2,7 @@ package com.renault.restaurantbackend.services;
 
 import com.renault.restaurantbackend.api.v1.mapper.ClientTableMapper;
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
-import com.renault.restaurantbackend.api.v1.model.ClientTableListDTO;
+import com.renault.restaurantbackend.api.v1.model.lists.ClientTableListDTO;
 import com.renault.restaurantbackend.domain.ClientTable;
 import com.renault.restaurantbackend.domain.Waiter;
 import com.renault.restaurantbackend.domain.enums.Status;

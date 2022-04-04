@@ -1,9 +1,11 @@
 package com.renault.restaurantbackend.controllers;
 
 import com.renault.restaurantbackend.api.v1.model.MenuDTO;
+import com.renault.restaurantbackend.api.v1.model.lists.MenuListDTO;
 import com.renault.restaurantbackend.services.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,15 @@ public class MenuController {
   public MenuDTO createMenu(@PathVariable String menuName) {
     return menuService.createMenu(menuName);
   }
-
+  @GetMapping({"/list"})
+  @ResponseStatus(HttpStatus.OK)
+  public MenuListDTO getListMenu() {
+    return menuService.getListMenu();
+  }
+  @GetMapping({"/{menuName}/get"})
+  @ResponseStatus(HttpStatus.OK)
+  public MenuDTO getMenu(@PathVariable String menuName) {
+    return menuService.getMenuByName(menuName);
+  }
 
 }

@@ -1,7 +1,7 @@
 package com.renault.restaurantbackend.services;
 
 import com.renault.restaurantbackend.api.v1.model.ClientDTO;
-import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
+import com.renault.restaurantbackend.api.v1.model.lists.ClientListDTO;
 
 public interface ClientService {
   ClientListDTO getAllClientsWithStatus(String status);

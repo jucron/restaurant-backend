@@ -1,8 +1,7 @@
 package com.renault.restaurantbackend.controllers;
 
-import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
-import com.renault.restaurantbackend.api.v1.model.ClientTableListDTO;
+import com.renault.restaurantbackend.api.v1.model.lists.ClientTableListDTO;
 import com.renault.restaurantbackend.services.TableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

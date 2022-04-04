@@ -2,9 +2,9 @@ package com.renault.restaurantbackend.controllers;
 
 import com.renault.restaurantbackend.api.v1.mapper.AbstractRestControllerTest;
 import com.renault.restaurantbackend.api.v1.model.ClientDTO;
-import com.renault.restaurantbackend.api.v1.model.ClientListDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
+import com.renault.restaurantbackend.api.v1.model.lists.ClientListDTO;
 import com.renault.restaurantbackend.controllers.forms.ClientNameAndTableNumberForm;
 import com.renault.restaurantbackend.services.ClientService;
 import java.time.LocalDateTime;

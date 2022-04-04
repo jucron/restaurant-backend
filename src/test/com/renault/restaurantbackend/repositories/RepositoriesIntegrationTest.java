@@ -1,15 +1,12 @@
-package com.renault.restaurantbackend.services;
+package com.renault.restaurantbackend.repositories;
 
 import com.renault.restaurantbackend.domain.Client;
 import com.renault.restaurantbackend.domain.ClientOrder;
 import com.renault.restaurantbackend.domain.ClientTable;
-import com.renault.restaurantbackend.domain.Consumable;
-import com.renault.restaurantbackend.repositories.ClientRepository;
-import com.renault.restaurantbackend.repositories.ClientTableRepository;
-import com.renault.restaurantbackend.repositories.ConsumableRepository;
-import com.renault.restaurantbackend.repositories.OrderRepository;
+import com.renault.restaurantbackend.domain.Menu;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-class ClientServiceIT {
+@Slf4j
+class RepositoriesIntegrationTest {
 /*
 Testing repository fetch methods
  */
@@ -37,7 +35,9 @@ Testing repository fetch methods
   @Autowired
   private OrderRepository orderRepository;
   @Autowired
-  private ConsumableRepository mealRepository;
+  private ConsumableRepository consumableRepository;
+  @Autowired
+  private MenuRepository menuRepository;
 
   private final String CLIENT_NAME_1 = "clientName1";
   private final String CLIENT_NAME_2 = "clientName2";
@@ -47,13 +47,19 @@ Testing repository fetch methods
   private final String MEAL_EXAMPLE_2 = "mealExample2";
   private final String BEVERAGE_EXAMPLE_1 = "beverageExample1";
   private final String BEVERAGE_EXAMPLE_2 = "beverageExample2";
+  private final String MENU_EXAMPLE = "menu_example";
+
+  private boolean dataLoaded = false;
 
   @BeforeEach
   void setUp() {
-    this.loadData();
+    if (!dataLoaded) {
+      log.info("Data was not loaded yet, bootstrapping now.");
+      this.loadData();
+      dataLoaded=true;
+    }
   }
   private void loadData() {
-    if (clientRepository.findAll().size()==0) {
       //create a client with table and order
       Client clientExample1 = new Client(); clientExample1.setName(CLIENT_NAME_1);
       Client clientExample2 = new Client(); clientExample2.setName(CLIENT_NAME_2);
@@ -69,18 +75,22 @@ Testing repository fetch methods
       orderRepository.save(order1);
       //associating order with client
       clientExample1.setOrder(order1); clientRepository.save(clientExample1);
-      //create meals and beverages
+      //Creating and persisting a Menu to be fetched:
+      Menu menu = new Menu(); menu.setName(MENU_EXAMPLE);
+      menuRepository.save(menu);
+
+      /*create meals and beverages todo
       double meal_value = 10.05; double beverage_value = 5.45;
       Consumable consumable1 = new Consumable();
       consumable1.setConsumable(MEAL_EXAMPLE_1); consumable1.setValue(meal_value);
       Consumable consumable2 = new Consumable();
       consumable2.setConsumable(MEAL_EXAMPLE_2); consumable2.setValue(meal_value/2);
 
-      mealRepository.saveAll(List.of(consumable1, consumable2));
+      consumableRepository.saveAll(List.of(consumable1, consumable2));
       //associate meals and beverages with Order
       //order1.setMeals(new HashSet<>(List.of(meal1,meal2))); order1.setBeverages(new HashSet<>(List.of(beverage1,beverage2)));
       orderRepository.save(order1);
-    }
+      */
   }
   @Test
   void fetchAllClientsFromRepo() {
@@ -124,6 +134,14 @@ Testing repository fetch methods
     //then
     assertTrue(clientOptional.isPresent());
     assertEquals(clientId,clientOptional.get().getId());
-
+  }
+  @Test
+  void findMenuByName() {
+    //given
+    //when
+    Menu menuFetched = menuRepository.findByName(MENU_EXAMPLE);
+    //then
+    assertNotNull(menuFetched.getId()); //confirm ID generation
+    assertEquals(MENU_EXAMPLE,menuFetched.getName()); //confirm fetch of client by name
   }
 }

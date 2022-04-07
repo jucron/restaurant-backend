@@ -5,7 +5,6 @@ import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
 import com.renault.restaurantbackend.api.v1.model.lists.ClientTableListDTO;
 import com.renault.restaurantbackend.domain.ClientTable;
 import com.renault.restaurantbackend.domain.Waiter;
-import com.renault.restaurantbackend.domain.enums.Status;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
 import com.renault.restaurantbackend.repositories.WaiterRepository;
 import java.util.ArrayList;
@@ -98,7 +97,7 @@ class TableServiceImplTest {
     int tableNumber = 1; ClientTable table = new ClientTable(); table.setNumber(tableNumber);
     long waiterId = 10L; Waiter waiter = new Waiter(); waiter.setId(waiterId);
 
-    given(tableRepository.findByNumberAndStatus(tableNumber,Status.OPEN)).willReturn(table);
+    given(tableRepository.findByNumber(tableNumber)).willReturn(table);
     given(waiterRepository.findById(waiterId)).willReturn(Optional.of(waiter));
     given(tableMapper.clientTableToClientTableDTO(any())).willReturn(new ClientTableDTO());
     //when

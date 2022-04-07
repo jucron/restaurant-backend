@@ -25,7 +25,7 @@ import static com.renault.restaurantbackend.domain.enums.Status.OPEN;
 public class ClientServiceImpl implements ClientService {
   private final ClientMapper clientMapper;
   private final ClientRepository clientRepository;
-  private final ClientTableRepository clientTableRepository;
+  private final ClientTableRepository tableRepository;
   private final ConsumableRepository mealRepository;
   private final OrderRepository orderRepository;
   private final ConsumableMapper mealMapper;
@@ -59,24 +59,26 @@ public class ClientServiceImpl implements ClientService {
   @Override
   public ClientDTO createClient(String name, int tableNumber) {
     //Validation: Check if TableNumber is being used (status==OPEN)
-    if (clientTableRepository.findByNumberAndStatus(tableNumber,OPEN)!=null) {
+    ClientTable existentTable = tableRepository.findByNumber(tableNumber);
+    if (existentTable.getStatus()==OPEN) {
      return null;
     }
-    //Operation: create new client, table and order
-    Client newClient = new Client();
-    newClient.setName(name); newClient.setCheckInTime(LocalDateTime.now());
-    ClientTable newClientTable = new ClientTable(); newClientTable.setNumber(tableNumber); newClientTable.setStatus(OPEN);
+    //Operation 1/3: Change STATUS in existing table and persist
+    existentTable.setStatus(OPEN);
+    tableRepository.save(existentTable);
+    //Operation 2/3: create new order, change STATUS and persist
     ClientOrder newOrder = new ClientOrder(); newOrder.setStatus(OPEN);
-
-    clientTableRepository.save(newClientTable); orderRepository.save(newOrder);
-    newClient.setTable(newClientTable); newClient.setOrder(newOrder);
+    orderRepository.save(newOrder);
+    //Operation 3/3: create new client with Name And CheckInTime, assign newOrder and assign existing table. Persist.
+    Client newClient = new Client(); newClient.setName(name); newClient.setCheckInTime(LocalDateTime.now());
+    newClient.setTable(existentTable); newClient.setOrder(newOrder);
     clientRepository.save(newClient);
     return clientMapper.clientToClientDTO(newClient);
   }
 
   @Override
   public ClientDTO checkoutClient(String clientName, int tableNumber) {
-    ClientTable clientTable = clientTableRepository.findByNumberAndStatus(tableNumber,OPEN);
+    ClientTable clientTable = tableRepository.findByNumber(tableNumber);
     //Validation: Check if Table have CLOSED status (not in use)
     if (clientTable.getStatus()==CLOSED) {
       return null;
@@ -92,7 +94,7 @@ public class ClientServiceImpl implements ClientService {
     //Assigning status CLOSED to Table and Order
     ClientTable table = clientFetched.getTable(); ClientOrder order = clientFetched.getOrder();
     table.setStatus(CLOSED); order.setStatus(CLOSED);
-    clientTableRepository.save(table); orderRepository.save(order);
+    tableRepository.save(table); orderRepository.save(order);
 
     return clientMapper.clientToClientDTO(clientFetched);
   }

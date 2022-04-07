@@ -38,7 +38,7 @@ Note about Status: OPEN is the same as Active/In_Use. CLOSED is the same as Deac
 * Assign a Waiter to an 'OPEN' Table
 
 Note: Table status is managed by Client check-in/out
-### Menu management _(work in progress)_
+### Menu management 
 * Create a new Menu with a name (for example: "dinner menu") 
 * View list of Menu's
 * Fetch a Menu by its name

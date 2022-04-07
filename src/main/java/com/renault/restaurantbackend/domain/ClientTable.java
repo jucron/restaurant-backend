@@ -1,7 +1,6 @@
 package com.renault.restaurantbackend.domain;
 
 import com.renault.restaurantbackend.domain.enums.Status;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -19,7 +18,6 @@ public class ClientTable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(unique = true)
   private int number;
 
   @Enumerated(EnumType.STRING)

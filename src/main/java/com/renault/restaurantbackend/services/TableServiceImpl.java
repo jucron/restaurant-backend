@@ -46,8 +46,8 @@ public class TableServiceImpl implements TableService {
   @Override
   public ClientTableDTO assignWaiterToTable(int tableNumber, long waiterId) {
     //Find table in repo (Table must be OPEN, meaning in use by Client)
-    ClientTable tableFetched = tableRepository.findByNumberAndStatus(tableNumber,Status.OPEN);
-    if (tableFetched==null) {return null;}
+    ClientTable tableFetched = tableRepository.findByNumber(tableNumber);
+    if (tableFetched.getStatus()==Status.CLOSED) {return null;}
     //table found, find waiter in repo
     Optional<Waiter> waiterFetchedOptional = waiterRepository.findById(waiterId);
     if (waiterFetchedOptional.isEmpty()) {return null;}

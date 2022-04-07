@@ -17,7 +17,6 @@ public class Consumable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(unique = true)
   private String consumable;
 
   @Enumerated(EnumType.STRING)

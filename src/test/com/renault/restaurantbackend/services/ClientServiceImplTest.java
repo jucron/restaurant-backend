@@ -106,7 +106,8 @@ class ClientServiceImplTest {
   @Test
   void createANewClientWithAGivenNameAndTableNumber_returnsDTOWithNewOrderAndTable() {
     //given
-    given(clientTableRepository.findByNumberAndStatus(TABLE_NUMBER,OPEN)).willReturn(null);
+    ClientTable table = new ClientTable(); table.setStatus(CLOSED); table.setNumber(TABLE_NUMBER);
+    given(clientTableRepository.findByNumber(TABLE_NUMBER)).willReturn(table);
     given(clientMapper.clientToClientDTO(any(Client.class))).willReturn(new ClientDTO());
     //when
     ClientDTO clientDTO = clientService.createClient(CLIENT_EXAMPLE_NAME_1, TABLE_NUMBER);
@@ -131,7 +132,7 @@ class ClientServiceImplTest {
     ClientOrder order = new ClientOrder(); order.setStatus(OPEN);
     clientExample.setTable(tableExample); clientExample.setOrder(order);
 
-    given(clientTableRepository.findByNumberAndStatus(TABLE_NUMBER,OPEN)).willReturn(tableExample);
+    given(clientTableRepository.findByNumber(TABLE_NUMBER)).willReturn(tableExample);
     given(clientRepository.findByNameAndTableAndCheckOutTime(
         CLIENT_EXAMPLE_NAME_1,tableExample,null)).willReturn(clientExample);
     given(clientMapper.clientToClientDTO(any(Client.class))).willReturn(new ClientDTO());

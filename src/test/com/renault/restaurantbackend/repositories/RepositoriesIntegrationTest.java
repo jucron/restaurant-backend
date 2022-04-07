@@ -49,7 +49,7 @@ Testing repository fetch methods
   private final String BEVERAGE_EXAMPLE_2 = "beverageExample2";
   private final String MENU_EXAMPLE = "menu_example";
 
-  private boolean dataLoaded = false;
+  private static boolean dataLoaded = false;
 
   @BeforeEach
   void setUp() {
@@ -71,10 +71,10 @@ Testing repository fetch methods
       clientExample1.setTable(clientTable1); clientExample2.setTable(clientTable2);
       clientRepository.save(clientExample1); clientRepository.save(clientExample2);
       //creating, persisting and gen.Id with Order
-      ClientOrder order1 = new ClientOrder(); order1.setStatus(OPEN);
-      orderRepository.save(order1);
+      ClientOrder order = new ClientOrder(); order.setStatus(OPEN);
+      orderRepository.save(order);
       //associating order with client
-      clientExample1.setOrder(order1); clientRepository.save(clientExample1);
+      clientExample1.setOrder(order); clientRepository.save(clientExample1);
       //Creating and persisting a Menu to be fetched:
       Menu menu = new Menu(); menu.setName(MENU_EXAMPLE);
       menuRepository.save(menu);
@@ -102,11 +102,11 @@ Testing repository fetch methods
     assertEquals(2,clientList.size());
   }
   @Test
-  void findTableByTableNumberAndStatus() {
+  void findTableByTableNumber() {
     //given
     //when
-    ClientTable existingClientTable = clientTableRepository.findByNumberAndStatus(CLIENT_TABLE_NUMBER_1,OPEN);
-    ClientTable nonExistingClientTable = clientTableRepository.findByNumberAndStatus(CLIENT_TABLE_NUMBER_2,OPEN);
+    ClientTable existingClientTable = clientTableRepository.findByNumber(CLIENT_TABLE_NUMBER_1);
+    ClientTable nonExistingClientTable = clientTableRepository.findByNumber(CLIENT_TABLE_NUMBER_2+1);
 
     //then
     assertNotNull(existingClientTable.getId());
@@ -116,7 +116,7 @@ Testing repository fetch methods
   @Test
   void findClientByNameAndClientTableAndCheckOutTimeNull() {
     //given
-    ClientTable clientTable = clientTableRepository.findByNumberAndStatus(CLIENT_TABLE_NUMBER_1,OPEN);
+    ClientTable clientTable = clientTableRepository.findByNumber(CLIENT_TABLE_NUMBER_1);
     //when
     Client clientFetched = clientRepository.findByNameAndTableAndCheckOutTime(
         CLIENT_NAME_1,clientTable,null);

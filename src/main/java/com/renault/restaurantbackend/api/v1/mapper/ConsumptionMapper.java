@@ -12,5 +12,6 @@ public interface ConsumptionMapper {
   ConsumptionMapper INSTANCE = Mappers.getMapper(ConsumptionMapper.class);
 
   @Mapping(source = "consumable", target = "consumableDTO")
+  @Mapping(source = "order", target = "orderDTO")
   ConsumptionDTO consumptionToDTO(Consumption consumption);
 }

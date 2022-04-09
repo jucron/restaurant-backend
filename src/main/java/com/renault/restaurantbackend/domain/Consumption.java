@@ -1,5 +1,6 @@
 package com.renault.restaurantbackend.domain;
 
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +19,13 @@ public class Consumption {
   @Column(nullable = false)
   private int quantity;
 
+  private LocalDateTime lastUpdated;
+
   @ManyToOne
   @JoinColumn(name = "consumable_id")
   private Consumable consumable;
+
+  @ManyToOne
+  @JoinColumn(name = "order_id")
+  private ClientOrder order;
 }

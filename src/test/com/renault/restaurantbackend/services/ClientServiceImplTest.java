@@ -34,22 +34,22 @@ import static org.mockito.Mockito.verify;
 
 class ClientServiceImplTest {
 
-  ClientService clientService;
+  private ClientService clientService;
 
   @Mock
-  ClientMapper clientMapper;
+  private ClientMapper clientMapper;
   @Mock
-  ClientRepository clientRepository;
+  private ClientRepository clientRepository;
   @Mock
-  ClientTableRepository clientTableRepository;
+  private ClientTableRepository clientTableRepository;
   @Mock
-  ConsumableRepository mealRepository;
+  private ConsumableRepository mealRepository;
   @Mock
-  OrderRepository orderRepository;
+  private OrderRepository orderRepository;
   @Mock
-  ConsumableMapper mealMapper;
+  private ConsumableMapper mealMapper;
   @Captor
-  ArgumentCaptor<Client> clientCaptor;
+  private ArgumentCaptor<Client> clientCaptor;
 
   private static final String CLIENT_EXAMPLE_NAME_1 = "clientExampleName1";
   private static final String CLIENT_EXAMPLE_NAME_2 = "clientExampleName2";

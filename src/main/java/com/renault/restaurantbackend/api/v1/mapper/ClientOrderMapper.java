@@ -13,6 +13,5 @@ public interface ClientOrderMapper {
 
   @Mapping(source = "cook", target = "cookDTO")
   @Mapping(source = "waiter", target = "waiterDTO")
-  @Mapping(source = "consumption", target = "consumptionDTO")
   ClientOrderDTO orderToOrderDTO(ClientOrder order);
 }

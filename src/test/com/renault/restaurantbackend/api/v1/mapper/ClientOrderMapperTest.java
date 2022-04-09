@@ -2,11 +2,9 @@ package com.renault.restaurantbackend.api.v1.mapper;
 
 import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
 import com.renault.restaurantbackend.domain.ClientOrder;
-import com.renault.restaurantbackend.domain.Consumption;
 import com.renault.restaurantbackend.domain.Cook;
 import com.renault.restaurantbackend.domain.Waiter;
 import com.renault.restaurantbackend.domain.enums.Status;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,18 +18,15 @@ class ClientOrderMapperTest {
   void clientOrderToClientOrderDTO() {
     //given
     ClientOrder order = new ClientOrder(); order.setId(1L);
-    order.setStatus(Status.OPEN); order.setLastUpdated(LocalDateTime.now());
+    order.setStatus(Status.OPEN);
     order.setCook(new Cook()); order.setWaiter(new Waiter());
-    order.setConsumption(new Consumption());
 
     //when
     ClientOrderDTO orderDTO = clientOrderMapper.orderToOrderDTO(order);
     //then
     assertEquals(order.getId(),orderDTO.getId());
     assertEquals(order.getStatus(),orderDTO.getStatus());
-    assertEquals(order.getLastUpdated(),orderDTO.getLastUpdated());
     assertNotNull(orderDTO.getCookDTO());
     assertNotNull(orderDTO.getWaiterDTO());
-    assertNotNull(orderDTO.getConsumptionDTO());
   }
 }

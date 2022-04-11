@@ -45,8 +45,9 @@ Note: Table status is managed by Client check-in/out
 
 Note: Menu will hold the time registry in which the last Meal/Beverage was created
 ### Consumption management _(work in progress)_
-* Create a Consumption for a Client's Order with quantity, Consumable 
-* Delete a Consumption previously created
+* Create a Consumption for a Client's Order with quantity and a Consumable 
+* Update an existing Consumption's quantity
+* Delete an existing Consumption
 * Fetch Client's Consumption List and total value
 ### Consumable management _(work in progress)_
 * Create a Consumable, with type (like Meal/Beverage), and associate it with an existing Menu

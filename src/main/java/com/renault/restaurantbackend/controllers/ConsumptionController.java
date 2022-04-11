@@ -6,6 +6,7 @@ import com.renault.restaurantbackend.services.ConsumptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,7 +22,12 @@ public class ConsumptionController {
 
   @PostMapping({"/create"})
   @ResponseStatus(HttpStatus.CREATED)
-  public ConsumptionDTO createClients(@RequestBody ConsumptionForm form) {
+  public ConsumptionDTO createConsumption(@RequestBody ConsumptionForm form) {
     return consumptionService.createConsumption(form);
+  }
+  @PutMapping({"/update"})
+  @ResponseStatus(HttpStatus.OK)
+  public ConsumptionDTO updateConsumption(@RequestBody ConsumptionForm form) {
+    return consumptionService.updateConsumption(form);
   }
 }

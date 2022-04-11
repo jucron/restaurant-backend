@@ -5,4 +5,6 @@ import com.renault.restaurantbackend.controllers.forms.ConsumptionForm;
 
 public interface ConsumptionService {
   ConsumptionDTO createConsumption(ConsumptionForm form);
+
+  ConsumptionDTO updateConsumption(ConsumptionForm form);
 }

@@ -6,6 +6,7 @@ import com.renault.restaurantbackend.controllers.forms.ConsumptionForm;
 import com.renault.restaurantbackend.domain.Consumption;
 import com.renault.restaurantbackend.repositories.ConsumptionRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +24,19 @@ public class ConsumptionServiceImpl implements ConsumptionService {
     newConsumption.setLastUpdated(LocalDateTime.now());
     consumptionRepository.save(newConsumption);
     return consumptionMapper.consumptionToDTO(newConsumption);
+  }
+
+  @Override public ConsumptionDTO updateConsumption(ConsumptionForm form) {
+    List<Consumption> consumptionList = consumptionRepository.findByOrderId(form.getOrder().getId());
+    if (consumptionList.size()==0) {return null;} //If Order not found in repo
+
+    for(Consumption consumption : consumptionList) {
+      if (consumption.getConsumable()==form.getConsumable()) {
+        consumption.setQuantity(form.getQuantity());
+        consumptionRepository.save(consumption);
+        return consumptionMapper.consumptionToDTO(consumption);
+      }
+    }
+    return null; //If consumption not found in repo
   }
 }

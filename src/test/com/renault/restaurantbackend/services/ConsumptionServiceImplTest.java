@@ -89,4 +89,26 @@ class ConsumptionServiceImplTest {
     assertNotEquals(QUANTITY_EXAMPLE,capturedConsumption.getQuantity());
     assertEquals(newQuantity,capturedConsumption.getQuantity());
   }
+  @Test
+  void deleteAConsumptionGivenForm() {
+    //given
+    Consumable consumable = new Consumable(); consumable.setConsumable(CONSUMABLE_EXAMPLE);
+    ClientOrder order = new ClientOrder(); order.setId(ORDER_ID);
+    Consumption consumption = new Consumption(); consumption.setQuantity(QUANTITY_EXAMPLE);
+    consumption.setOrder(order); consumption.setConsumable(consumable);
+
+    ConsumptionForm form = new ConsumptionForm()
+        .withOrder(order)
+        .withQuantity(QUANTITY_EXAMPLE)
+        .withConsumable(consumable);
+
+    given(consumptionRepository.findByOrderId(ORDER_ID)).willReturn(List.of(consumption));
+
+    //when
+    consumptionService.deleteConsumption(form);
+
+    //then
+    verify(consumptionRepository).findByOrderId(ORDER_ID); //Fetch list of consumptions by OrderId
+    verify(consumptionRepository).delete(consumption); //Delete is called for this consumption
+  }
 }

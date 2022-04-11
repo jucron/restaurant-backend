@@ -7,4 +7,6 @@ public interface ConsumptionService {
   ConsumptionDTO createConsumption(ConsumptionForm form);
 
   ConsumptionDTO updateConsumption(ConsumptionForm form);
+
+  void deleteConsumption(ConsumptionForm form);
 }

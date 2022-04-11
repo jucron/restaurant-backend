@@ -39,4 +39,15 @@ public class ConsumptionServiceImpl implements ConsumptionService {
     }
     return null; //If consumption not found in repo
   }
+
+  @Override public void deleteConsumption(ConsumptionForm form) {
+    List<Consumption> consumptionList = consumptionRepository.findByOrderId(form.getOrder().getId());
+
+    for(Consumption consumption : consumptionList) {
+      if (consumption.getConsumable()==form.getConsumable()) {
+        consumption.setQuantity(form.getQuantity());
+        consumptionRepository.delete(consumption);
+      }
+    }
+  }
 }

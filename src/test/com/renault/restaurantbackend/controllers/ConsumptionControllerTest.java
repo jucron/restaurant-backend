@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -28,8 +30,8 @@ class ConsumptionControllerTest extends AbstractRestControllerTest {
   /* Expected
    * OK: Create a Consumption for a Client's Order with quantity and a Consumable
    * OK: Update an existing Consumption's quantity
-   * Delete an existing Consumption
-   * Fetch Client's Consumption List and total value
+   * OK: Delete an existing Consumption
+   * Todo: Fetch Client's Consumption List and total value
    */
   @InjectMocks
   ConsumptionController consumptionController;
@@ -107,7 +109,24 @@ class ConsumptionControllerTest extends AbstractRestControllerTest {
         .andExpect(jsonPath("$.orderDTO.id", equalTo((int)ORDER_ID)));
   }
   @Test
-  void deleteAConsumption() {
+  void deleteAConsumption() throws Exception {
+    //given - Form to be delivered and check if Consumable exists
+    Consumable consumable = new Consumable(); consumable.setConsumable(CONSUMABLE_EXAMPLE);
+    ClientOrder order = new ClientOrder(); order.setId(ORDER_ID);
 
+    ConsumptionForm form = new ConsumptionForm()
+        .withOrder(order)
+        .withQuantity(QUANTITY_EXAMPLE)
+        .withConsumable(consumable);
+
+    //when and then
+    mockMvc.perform(delete(BASE_URL + "/delete")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(form)))
+        .andExpect(status().isFound())
+        ;
+    verify(consumptionService).deleteConsumption(form);
   }
+
 }

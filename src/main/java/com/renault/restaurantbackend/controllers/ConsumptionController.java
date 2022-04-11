@@ -5,6 +5,7 @@ import com.renault.restaurantbackend.controllers.forms.ConsumptionForm;
 import com.renault.restaurantbackend.services.ConsumptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,5 +30,10 @@ public class ConsumptionController {
   @ResponseStatus(HttpStatus.OK)
   public ConsumptionDTO updateConsumption(@RequestBody ConsumptionForm form) {
     return consumptionService.updateConsumption(form);
+  }
+  @DeleteMapping({"/delete"})
+  @ResponseStatus(HttpStatus.FOUND)
+  public void deleteConsumption(@RequestBody ConsumptionForm form) {
+    consumptionService.deleteConsumption(form);
   }
 }

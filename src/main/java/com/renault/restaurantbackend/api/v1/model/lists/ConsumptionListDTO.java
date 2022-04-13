@@ -1,7 +1,6 @@
 package com.renault.restaurantbackend.api.v1.model.lists;
 
-import com.renault.restaurantbackend.api.v1.model.ClientDTO;
-import com.renault.restaurantbackend.api.v1.model.ConsumableDTO;
+import com.renault.restaurantbackend.api.v1.model.ConsumptionDTO;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +12,6 @@ import lombok.With;
 @NoArgsConstructor
 @With
 public class ConsumptionListDTO {
-  ClientDTO clientDTO;
-  List<ConsumableDTO> consumableDTOS;
+  List<ConsumptionDTO> consumptionDTOS;
   double totalCost;
 }

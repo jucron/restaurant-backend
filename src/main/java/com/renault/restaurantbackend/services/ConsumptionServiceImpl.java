@@ -2,10 +2,12 @@ package com.renault.restaurantbackend.services;
 
 import com.renault.restaurantbackend.api.v1.mapper.ConsumptionMapper;
 import com.renault.restaurantbackend.api.v1.model.ConsumptionDTO;
+import com.renault.restaurantbackend.api.v1.model.lists.ConsumptionListDTO;
 import com.renault.restaurantbackend.controllers.forms.ConsumptionForm;
 import com.renault.restaurantbackend.domain.Consumption;
 import com.renault.restaurantbackend.repositories.ConsumptionRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,5 +51,17 @@ public class ConsumptionServiceImpl implements ConsumptionService {
         consumptionRepository.delete(consumption);
       }
     }
+  }
+
+  @Override public ConsumptionListDTO getListConsumption(long orderId) {
+    List<Consumption> consumptionList = consumptionRepository.findByOrderId(orderId);
+    ConsumptionListDTO consumptionListDTO = new ConsumptionListDTO().withConsumptionDTOS(new ArrayList<>());
+    double totalCost = 0;
+    for (Consumption consumption : consumptionList) {
+      totalCost += (consumption.getQuantity())*(consumption.getConsumable().getValue());
+      consumptionListDTO.getConsumptionDTOS().add(consumptionMapper.consumptionToDTO(consumption));
+    }
+    consumptionListDTO.setTotalCost(totalCost);
+    return consumptionListDTO;
   }
 }

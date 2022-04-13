@@ -4,10 +4,12 @@ import com.renault.restaurantbackend.api.v1.mapper.AbstractRestControllerTest;
 import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
 import com.renault.restaurantbackend.api.v1.model.ConsumableDTO;
 import com.renault.restaurantbackend.api.v1.model.ConsumptionDTO;
+import com.renault.restaurantbackend.api.v1.model.lists.ConsumptionListDTO;
 import com.renault.restaurantbackend.controllers.forms.ConsumptionForm;
 import com.renault.restaurantbackend.domain.ClientOrder;
 import com.renault.restaurantbackend.domain.Consumable;
 import com.renault.restaurantbackend.services.ConsumptionService;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,10 +19,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static com.renault.restaurantbackend.domain.enums.ConsumableType.BEVERAGE;
+import static com.renault.restaurantbackend.domain.enums.ConsumableType.MEAL;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,7 +37,7 @@ class ConsumptionControllerTest extends AbstractRestControllerTest {
    * OK: Create a Consumption for a Client's Order with quantity and a Consumable
    * OK: Update an existing Consumption's quantity
    * OK: Delete an existing Consumption
-   * Todo: Fetch Client's Consumption List and total value
+   * OK: Fetch Client's Consumption List and total value
    */
   @InjectMocks
   ConsumptionController consumptionController;
@@ -42,7 +48,8 @@ class ConsumptionControllerTest extends AbstractRestControllerTest {
   private final String BASE_URL = ConsumptionController.BASE_URL;
   private final long ORDER_ID = 1L;
   private final int QUANTITY_EXAMPLE = 10;
-  private final String CONSUMABLE_EXAMPLE = "Consumable_example";
+  private final String CONSUMABLE_EXAMPLE_1 = "Consumable_example_1";
+  private final String CONSUMABLE_EXAMPLE_2 = "Consumable_example_2";
 
   @BeforeEach
   void setUp() {
@@ -53,7 +60,7 @@ class ConsumptionControllerTest extends AbstractRestControllerTest {
   @Test
   void createConsumptionGivenOrderIdAndQuantityAndConsumable_returnsDTO() throws Exception {
     //given - Form to be delivered and DTOs to be returned when method is called
-    Consumable consumable = new Consumable(); consumable.setConsumable(CONSUMABLE_EXAMPLE);
+    Consumable consumable = new Consumable(); consumable.setConsumable(CONSUMABLE_EXAMPLE_1);
     ClientOrder order = new ClientOrder(); order.setId(ORDER_ID);
 
     ConsumptionForm form = new ConsumptionForm()
@@ -75,13 +82,13 @@ class ConsumptionControllerTest extends AbstractRestControllerTest {
             .content(asJsonString(form)))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.quantity", equalTo(QUANTITY_EXAMPLE)))
-        .andExpect(jsonPath("$.consumableDTO.consumable", equalTo(CONSUMABLE_EXAMPLE)))
+        .andExpect(jsonPath("$.consumableDTO.consumable", equalTo(CONSUMABLE_EXAMPLE_1)))
         .andExpect(jsonPath("$.orderDTO.id", equalTo((int)ORDER_ID)));
   }
   @Test
   void updateAConsumptionQuantity_returnsDTO() throws Exception {
     //given - Form to be delivered and DTOs to be returned when method is called
-    Consumable consumable = new Consumable(); consumable.setConsumable(CONSUMABLE_EXAMPLE);
+    Consumable consumable = new Consumable(); consumable.setConsumable(CONSUMABLE_EXAMPLE_1);
     ClientOrder order = new ClientOrder(); order.setId(ORDER_ID);
 
     int newQuantity = QUANTITY_EXAMPLE+1;
@@ -105,13 +112,13 @@ class ConsumptionControllerTest extends AbstractRestControllerTest {
             .content(asJsonString(form)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.quantity", equalTo(newQuantity)))
-        .andExpect(jsonPath("$.consumableDTO.consumable", equalTo(CONSUMABLE_EXAMPLE)))
+        .andExpect(jsonPath("$.consumableDTO.consumable", equalTo(CONSUMABLE_EXAMPLE_1)))
         .andExpect(jsonPath("$.orderDTO.id", equalTo((int)ORDER_ID)));
   }
   @Test
   void deleteAConsumption() throws Exception {
     //given - Form to be delivered and check if Consumable exists
-    Consumable consumable = new Consumable(); consumable.setConsumable(CONSUMABLE_EXAMPLE);
+    Consumable consumable = new Consumable(); consumable.setConsumable(CONSUMABLE_EXAMPLE_1);
     ClientOrder order = new ClientOrder(); order.setId(ORDER_ID);
 
     ConsumptionForm form = new ConsumptionForm()
@@ -127,6 +134,42 @@ class ConsumptionControllerTest extends AbstractRestControllerTest {
         .andExpect(status().isFound())
         ;
     verify(consumptionService).deleteConsumption(form);
+  }
+  @Test
+  void getListOfConsumptionDTO() throws Exception {
+    //given
+    double consumableValue1 = 10; double consumableValue2 = 15;
+    int quantity1 = 5; int quantity2 = 10;
+    double totalCost = (quantity1*consumableValue1)+(quantity2*consumableValue2);
+
+    ClientOrderDTO orderDTO = new ClientOrderDTO(); orderDTO.setId(ORDER_ID);
+    ConsumableDTO consumableDTO1 = new ConsumableDTO(); consumableDTO1.setConsumable(CONSUMABLE_EXAMPLE_1);
+    consumableDTO1.setConsumableType(MEAL); consumableDTO1.setValue(consumableValue1);
+    ConsumableDTO consumableDTO2 = new ConsumableDTO(); consumableDTO2.setConsumable(CONSUMABLE_EXAMPLE_2);
+    consumableDTO2.setConsumableType(BEVERAGE); consumableDTO2.setValue(consumableValue2);
+    ConsumptionDTO consumptionDTO1 = new ConsumptionDTO(); consumptionDTO1.setOrderDTO(orderDTO);
+    consumptionDTO1.setQuantity(quantity1); consumptionDTO1.setConsumableDTO(consumableDTO1);
+    ConsumptionDTO consumptionDTO2 = new ConsumptionDTO(); consumptionDTO2.setOrderDTO(orderDTO);
+    consumptionDTO2.setQuantity(quantity2); consumptionDTO2.setConsumableDTO(consumableDTO2);
+
+    ConsumptionListDTO consumptionListDTO = new ConsumptionListDTO()
+        .withConsumptionDTOS(List.of(consumptionDTO1,consumptionDTO2))
+        .withTotalCost(totalCost);
+
+    given(consumptionService.getListConsumption(ORDER_ID)).willReturn(consumptionListDTO);
+
+    //when and then
+    mockMvc.perform(get(BASE_URL +"/"+ORDER_ID+"/list")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.consumptionDTOS[0].orderDTO.id", equalTo( (int) ORDER_ID)))
+        .andExpect(jsonPath("$.consumptionDTOS[0].quantity", equalTo( quantity1)))
+        .andExpect(jsonPath("$.consumptionDTOS[1].quantity", equalTo( quantity2)))
+        .andExpect(jsonPath("$.consumptionDTOS", hasSize(2)))
+        .andExpect(jsonPath("$.consumptionDTOS[0].consumableDTO.consumableType", equalTo(MEAL.toString())))
+        .andExpect(jsonPath("$.totalCost", equalTo(totalCost)))
+    ;
   }
 
 }

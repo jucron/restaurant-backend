@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static com.renault.restaurantbackend.domain.enums.ConsumableType.BEVERAGE;
+import static com.renault.restaurantbackend.domain.enums.ConsumableType.MEAL;
 import static com.renault.restaurantbackend.domain.enums.Status.CLOSED;
 import static com.renault.restaurantbackend.domain.enums.Status.OPEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -85,13 +87,13 @@ Testing repository fetch methods
       clientRepository.saveAll(List.of(clientExample1,clientExample2));
       //create Consumables: meals and beverages
       double meal_value = 10.05; double beverage_value = 5.45;
-      Consumable consumable1 = new Consumable();
+      Consumable consumable1 = new Consumable(); consumable1.setConsumableType(MEAL);
       consumable1.setConsumable(MEAL_EXAMPLE_1); consumable1.setValue(meal_value);
-      Consumable consumable2 = new Consumable();
+      Consumable consumable2 = new Consumable(); consumable2.setConsumableType(MEAL);
       consumable2.setConsumable(MEAL_EXAMPLE_2); consumable2.setValue(meal_value/2);
-      Consumable consumable3 = new Consumable();
+      Consumable consumable3 = new Consumable(); consumable3.setConsumableType(BEVERAGE);
       consumable3.setConsumable(BEVERAGE_EXAMPLE_1); consumable3.setValue(beverage_value);
-      Consumable consumable4 = new Consumable();
+      Consumable consumable4 = new Consumable(); consumable4.setConsumableType(BEVERAGE);
       consumable4.setConsumable(BEVERAGE_EXAMPLE_2); consumable4.setValue(beverage_value/2);
       Set<Consumable> consumableList = Set.of(consumable1, consumable2, consumable3, consumable4);
       consumableRepository.saveAll(consumableList);
@@ -169,5 +171,19 @@ Testing repository fetch methods
     //then
     assertEquals(0,nonExistingConsumptions.size());
     assertEquals(2,existingConsumptions.size());
+  }
+  @Test
+  void findConsumableByGivingItsName() {
+    //given
+
+    //when
+    Consumable consumable1 = consumableRepository.findByConsumable(MEAL_EXAMPLE_1).get();
+    Consumable consumable2 = consumableRepository.findByConsumable(BEVERAGE_EXAMPLE_1).get();
+
+    //then
+    assertEquals(MEAL,consumable1.getConsumableType());
+    assertEquals(MEAL_EXAMPLE_1,consumable1.getConsumable());
+    assertEquals(BEVERAGE,consumable2.getConsumableType());
+    assertEquals(BEVERAGE_EXAMPLE_1,consumable2.getConsumable());
   }
 }

@@ -7,6 +7,8 @@ import com.renault.restaurantbackend.domain.Menu;
 import com.renault.restaurantbackend.repositories.ConsumableRepository;
 import com.renault.restaurantbackend.repositories.MenuRepository;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -63,6 +65,27 @@ class ConsumableServiceImplTest {
     assertEquals(consumableDTO.getConsumable(),consumableSaved.getConsumable());
     assertEquals(consumableDTO.getConsumableType(),consumableSaved.getConsumableType());
     assertEquals(consumableDTO.getValue(),consumableSaved.getValue());
+  }
+  @Test
+  void deleteAConsumableByGivingItsName() {
+    //when: only menu1 have the consumable
+    Consumable consumable = createConsumable();
+    Menu menu1 = new Menu(); menu1.setConsumables(new HashSet<>());
+    menu1.getConsumables().add(consumable);
+    Menu menu2 = new Menu(); menu2.setConsumables(new HashSet<>());
+
+    given(consumableRepository.findByConsumable(CONSUMABLE_EXAMPLE)).willReturn(
+        Optional.of(consumable));
+    given(menuRepository.findAll()).willReturn(List.of(menu1,menu2));
+    //when
+    consumableService.deleteConsumable(CONSUMABLE_EXAMPLE);
+
+    //then
+    verify(consumableRepository).findByConsumable(CONSUMABLE_EXAMPLE); //OK: IT-test
+    verify(menuRepository).findAll();
+    verify(menuRepository).save(menu1);
+    verify(consumableRepository).delete(consumable);
+
   }
   ConsumableDTO createConsumableDTO() {
     ConsumableDTO consumable = new ConsumableDTO(); consumable.setConsumable(CONSUMABLE_EXAMPLE);

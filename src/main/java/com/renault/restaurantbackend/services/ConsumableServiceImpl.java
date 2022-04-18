@@ -6,6 +6,8 @@ import com.renault.restaurantbackend.domain.Consumable;
 import com.renault.restaurantbackend.domain.Menu;
 import com.renault.restaurantbackend.repositories.ConsumableRepository;
 import com.renault.restaurantbackend.repositories.MenuRepository;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,4 +32,24 @@ public class ConsumableServiceImpl implements ConsumableService {
     return consumableMapper.consumableToDTO(newConsumable);
   }
 
+  @Override public void deleteConsumable(String consumableName) {
+    //Fetch Consumable:
+    Optional<Consumable> optionalConsumable = consumableRepository.findByConsumable(consumableName);
+    if (optionalConsumable.isPresent()) {
+
+      Consumable consumable = optionalConsumable.get();
+      //Remove from Menus, and persist the Menus in which was removed:
+      List<Menu> menuList = menuRepository.findAll();
+      for (Menu menu : menuList) {
+        if (menu.getConsumables().remove(consumable)) {
+          menuRepository.save(menu);
+        }
+      }
+      //Delete Consumable
+      consumableRepository.delete(consumable);
+
+    } else  {
+      //todo: throw ExceptionNotFound
+    }
+  }
 }

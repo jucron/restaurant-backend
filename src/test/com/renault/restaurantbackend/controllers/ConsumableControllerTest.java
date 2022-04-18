@@ -15,6 +15,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static com.renault.restaurantbackend.domain.enums.ConsumableType.MEAL;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ConsumableControllerTest extends AbstractRestControllerTest {
   /* Expected:
    OK: Create a Consumable, with type (like Meal/Beverage), name and value. Associate it with an existing Menu
-   todo: Delete a Meal/Beverage, also removing its Menu's reference
+   OK: Delete a Meal/Beverage, also removing its Menu's reference
    */
   @InjectMocks
   ConsumableController consumableController;
@@ -59,6 +61,18 @@ class ConsumableControllerTest extends AbstractRestControllerTest {
         .andExpect(jsonPath("$.consumableType", equalTo(MEAL.toString())))
         .andExpect(jsonPath("$.value", equalTo(VALUE_EXAMPLE)));
 
+  }
+  @Test
+  void deleteAConsumableByGivingItsName() throws Exception {
+    //given
+
+    //when and then
+    mockMvc.perform(delete(BASE_URL + "/"+CONSUMABLE_EXAMPLE+"/delete")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isFound());
+
+    verify(consumableService).deleteConsumable(CONSUMABLE_EXAMPLE);
   }
   ConsumableDTO createConsumableDTO() {
     ConsumableDTO consumable = new ConsumableDTO(); consumable.setConsumable(CONSUMABLE_EXAMPLE);

@@ -4,6 +4,7 @@ import com.renault.restaurantbackend.api.v1.model.ConsumableDTO;
 import com.renault.restaurantbackend.services.ConsumableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,5 +25,10 @@ public class ConsumableController {
   public ConsumableDTO createConsumable(@RequestBody ConsumableDTO consumable,
                                         @PathVariable String menuName) {
     return consumableService.createConsumable(consumable,menuName);
+  }
+  @DeleteMapping({"/{consumableName}/delete"})
+  @ResponseStatus(HttpStatus.FOUND)
+  public void deleteConsumable(@PathVariable String consumableName) {
+    consumableService.deleteConsumable(consumableName);
   }
 }

@@ -50,7 +50,7 @@ Note: Menu will hold the time registry in which the last Meal/Beverage was creat
 * Delete an existing Consumption
 * Fetch Client's Consumption List and total value
 ### Consumable management _(work in progress)_
-* Create a Consumable, with type (like Meal/Beverage), and associate it with an existing Menu
+* Create a Consumable, with type (like Meal/Beverage), name and value. Associate it with an existing Menu
 * Delete a Meal/Beverage, also removing its Menu's reference
 ### Workers management _(work in progress)_
 * Create a worker, with type (Waiter, Cook, etc.), and associate with a Login account

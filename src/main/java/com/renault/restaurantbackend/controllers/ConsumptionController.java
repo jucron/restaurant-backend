@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConsumptionController {
   public static final String BASE_URL = "/api/v1/consumptions";
 
-  ConsumptionService consumptionService;
+  private final ConsumptionService consumptionService;
 
   @PostMapping({"/create"})
   @ResponseStatus(HttpStatus.CREATED)

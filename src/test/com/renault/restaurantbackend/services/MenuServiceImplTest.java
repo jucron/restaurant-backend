@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -52,6 +53,7 @@ class MenuServiceImplTest {
 
     Menu newMenu = menuArgumentCaptor.getValue();
     assertEquals(menuName,newMenu.getName()); //check name assignment
+    assertNotNull(newMenu.getConsumables());
   }
   @Test
   void getListOfMenus_returnsListDTO() {

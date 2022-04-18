@@ -7,6 +7,7 @@ import com.renault.restaurantbackend.domain.Menu;
 import com.renault.restaurantbackend.repositories.MenuRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class MenuServiceImpl implements MenuService {
   @Override public MenuDTO createMenu(String menuName) {
     Menu newMenu = new Menu(); newMenu.setName(menuName);
     newMenu.setLastUpdated(LocalDateTime.now());
+    newMenu.setConsumables(new HashSet<>());
     menuRepository.save(newMenu);
     return menuMapper.MenuToMenuDTO(newMenu);
   }

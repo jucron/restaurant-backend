@@ -53,14 +53,14 @@ Note: Menu will hold the time registry in which the last Meal/Beverage was creat
 * Create a Consumable, with type (like Meal/Beverage), name and value. Associate it with an existing Menu
 * Delete a Meal/Beverage, also removing its Menu's reference
 ### Workers management _(work in progress)_
-* Create a worker, with type (Waiter, Cook, etc.), and associate with a Login account
+* Create a worker account, with:
+  - type (Waiter, Cook, etc.);
+  - any name;
+  - Login account with unique username and password
 * Deactivate a worker
 ### Login management _(work in progress)_
-* Workers are able to create an account with unique username and e-mail
 * Password safely encoded and stored in database
-* Password reset of any worker login account
-* Option to update Name and Password
-
+* Password reset the password of any worker login account
 
 ### Database Diagram
 For the database modeling, a diagram with each table and relationships was created for the SportsBuddy application:

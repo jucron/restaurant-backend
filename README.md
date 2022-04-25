@@ -64,7 +64,7 @@ Note: Menu will hold the time registry in which the last Meal/Beverage was creat
 
 ### Database Diagram
 For the database modeling, a diagram with each table and relationships was created for the SportsBuddy application:
-<img src="https://user-images.githubusercontent.com/79875515/161033714-b250f6e0-665c-4028-898f-d6922cee06bf.png" width=75% height=75%>
+<img src="https://user-images.githubusercontent.com/79875515/165074101-f08285b1-23c3-4c1d-b42d-e5c54270631d.png" width=75% height=75%>
 
 ## Getting Started
 ### Data Initialization _work in progress_

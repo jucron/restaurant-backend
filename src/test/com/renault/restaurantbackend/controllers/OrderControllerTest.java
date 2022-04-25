@@ -1,8 +1,7 @@
 package com.renault.restaurantbackend.controllers;
 
 import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
-import com.renault.restaurantbackend.api.v1.model.CookDTO;
-import com.renault.restaurantbackend.api.v1.model.WaiterDTO;
+import com.renault.restaurantbackend.api.v1.model.WorkerDTO;
 import com.renault.restaurantbackend.services.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static com.renault.restaurantbackend.domain.enums.Status.OPEN;
+import static com.renault.restaurantbackend.domain.enums.WorkerType.WAITER;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -67,7 +67,8 @@ class OrderControllerTest {
   void assignAWaiterToAnOrder() throws Exception {
     //given
     ClientOrderDTO orderDTO = new ClientOrderDTO(); orderDTO.setId(ORDER_ID);
-    WaiterDTO waiterDTO = new WaiterDTO(); waiterDTO.setId(WAITER_ID);
+
+    WorkerDTO waiterDTO = new WorkerDTO(); waiterDTO.setId(WAITER_ID); waiterDTO.setWorkerType(WAITER);
     orderDTO.setStatus(OPEN); orderDTO.setWaiterDTO(waiterDTO);
 
     given(orderService.assignWaiterToOrder(ORDER_ID, WAITER_ID)).willReturn(orderDTO);
@@ -79,13 +80,14 @@ class OrderControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", equalTo((int) ORDER_ID)))
         .andExpect(jsonPath("$.status", equalTo("OPEN")))
+        .andExpect(jsonPath("$.waiterDTO.workerType", equalTo(WAITER.toString())))
         .andExpect(jsonPath("$.waiterDTO.id", equalTo((int)WAITER_ID)));
   }
   @Test
   void assignACookToAnOrder() throws Exception {
     //given
     ClientOrderDTO orderDTO = new ClientOrderDTO(); orderDTO.setId(ORDER_ID);
-    CookDTO cookDTO = new CookDTO(); cookDTO.setId(COOK_ID);
+    WorkerDTO cookDTO = new WorkerDTO(); cookDTO.setId(COOK_ID);
     orderDTO.setStatus(OPEN); orderDTO.setCookDTO(cookDTO);
 
     given(orderService.assignCookToOrder(ORDER_ID, COOK_ID)).willReturn(orderDTO);

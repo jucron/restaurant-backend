@@ -7,6 +7,6 @@ import lombok.Data;
 public class ClientOrderDTO {
   private Long id;
   private Status status;
-  private CookDTO cookDTO;
-  private WaiterDTO waiterDTO;
+  private WorkerDTO cookDTO;
+  private WorkerDTO waiterDTO;
 }

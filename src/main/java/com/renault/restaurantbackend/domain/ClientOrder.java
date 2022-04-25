@@ -24,9 +24,9 @@ public class ClientOrder {
 
   @ManyToOne
   @JoinColumn(name = "cook_id")
-  private Cook cook;
+  private Worker cook;
 
   @ManyToOne
   @JoinColumn(name = "waiter_id")
-  private Waiter waiter;
+  private Worker waiter;
 }

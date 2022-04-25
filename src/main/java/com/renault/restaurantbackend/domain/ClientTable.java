@@ -25,5 +25,5 @@ public class ClientTable {
 
   @ManyToOne
   @JoinColumn(name = "waiter_id")
-  private Waiter waiter;
+  private Worker waiter;
 }

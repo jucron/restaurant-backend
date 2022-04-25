@@ -4,12 +4,10 @@ import com.renault.restaurantbackend.api.v1.mapper.ClientOrderMapper;
 import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
 import com.renault.restaurantbackend.domain.Client;
 import com.renault.restaurantbackend.domain.ClientOrder;
-import com.renault.restaurantbackend.domain.Cook;
-import com.renault.restaurantbackend.domain.Waiter;
+import com.renault.restaurantbackend.domain.Worker;
 import com.renault.restaurantbackend.repositories.ClientRepository;
-import com.renault.restaurantbackend.repositories.CookRepository;
 import com.renault.restaurantbackend.repositories.OrderRepository;
-import com.renault.restaurantbackend.repositories.WaiterRepository;
+import com.renault.restaurantbackend.repositories.WorkerRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +16,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static com.renault.restaurantbackend.domain.enums.WorkerType.WAITER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,9 +34,7 @@ class OrderServiceImplTest {
   @Mock
   private ClientRepository clientRepository;
   @Mock
-  private WaiterRepository waiterRepository;
-  @Mock
-  private CookRepository cookRepository;
+  private WorkerRepository workerRepository;
   @Captor
   private ArgumentCaptor<ClientOrder> orderArgumentCaptor;
 
@@ -50,7 +47,7 @@ class OrderServiceImplTest {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     orderService = new OrderServiceImpl(
-        orderRepository,clientRepository,clientOrderMapper, waiterRepository, cookRepository);
+        orderRepository,clientRepository,clientOrderMapper, workerRepository);
   }
 
   @Test
@@ -74,17 +71,17 @@ class OrderServiceImplTest {
   void assignAWaiterToAnOrder_givenOrderIdAndWaiterId_returnsOrderDTO () {
     //given
     ClientOrder order = new ClientOrder(); order.setId(ORDER_ID);
-    Waiter waiter = new Waiter(); waiter.setId(WAITER_ID);
+    Worker waiter = new Worker(); waiter.setId(WAITER_ID); waiter.setWorkerType(WAITER);
 
     given(clientOrderMapper.orderToOrderDTO(any(ClientOrder.class))).willReturn(new ClientOrderDTO());
     given(orderRepository.findById(ORDER_ID)).willReturn(Optional.of(order));
-    given(waiterRepository.findById(WAITER_ID)).willReturn(Optional.of(waiter));
+    given(workerRepository.findById(WAITER_ID)).willReturn(Optional.of(waiter));
     //when
     ClientOrderDTO orderDTO = orderService.assignWaiterToOrder(ORDER_ID,WAITER_ID);
 
     //then
     verify(orderRepository).findById(ORDER_ID);
-    verify(waiterRepository).findById(WAITER_ID);
+    verify(workerRepository).findById(WAITER_ID);
     verify(orderRepository).save(any());
     verify(clientOrderMapper).orderToOrderDTO(orderArgumentCaptor.capture());
 
@@ -96,17 +93,17 @@ class OrderServiceImplTest {
   void assignACookToAnOrder_givenOrderIdAndCookId_returnsOrderDTO () {
     //given
     ClientOrder order = new ClientOrder(); order.setId(ORDER_ID);
-    Cook cook = new Cook(); cook.setId(COOK_ID);
+    Worker cook = new Worker(); cook.setId(COOK_ID);
 
     given(clientOrderMapper.orderToOrderDTO(any(ClientOrder.class))).willReturn(new ClientOrderDTO());
     given(orderRepository.findById(ORDER_ID)).willReturn(Optional.of(order));
-    given(cookRepository.findById(COOK_ID)).willReturn(Optional.of(cook));
+    given(workerRepository.findById(COOK_ID)).willReturn(Optional.of(cook));
     //when
     ClientOrderDTO orderDTO = orderService.assignCookToOrder(ORDER_ID,COOK_ID);
 
     //then
     verify(orderRepository).findById(ORDER_ID);
-    verify(cookRepository).findById(COOK_ID);
+    verify(workerRepository).findById(COOK_ID);
     verify(orderRepository).save(any());
     verify(clientOrderMapper).orderToOrderDTO(orderArgumentCaptor.capture());
 

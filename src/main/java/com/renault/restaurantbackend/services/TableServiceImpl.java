@@ -4,10 +4,11 @@ import com.renault.restaurantbackend.api.v1.mapper.ClientTableMapper;
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
 import com.renault.restaurantbackend.api.v1.model.lists.ClientTableListDTO;
 import com.renault.restaurantbackend.domain.ClientTable;
-import com.renault.restaurantbackend.domain.Waiter;
+import com.renault.restaurantbackend.domain.Worker;
 import com.renault.restaurantbackend.domain.enums.Status;
+import com.renault.restaurantbackend.domain.enums.WorkerType;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
-import com.renault.restaurantbackend.repositories.WaiterRepository;
+import com.renault.restaurantbackend.repositories.WorkerRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class TableServiceImpl implements TableService {
   private final ClientTableRepository tableRepository;
   private final ClientTableMapper tableMapper;
-  private final WaiterRepository waiterRepository;
+  private final WorkerRepository workerRepository;
 
 
   @Override
@@ -49,8 +50,9 @@ public class TableServiceImpl implements TableService {
     ClientTable tableFetched = tableRepository.findByNumber(tableNumber);
     if (tableFetched.getStatus()==Status.CLOSED) {return null;}
     //table found, find waiter in repo
-    Optional<Waiter> waiterFetchedOptional = waiterRepository.findById(waiterId);
-    if (waiterFetchedOptional.isEmpty()) {return null;}
+    Optional<Worker> waiterFetchedOptional = workerRepository.findById(waiterId);
+    if (waiterFetchedOptional.isEmpty() ||
+        waiterFetchedOptional.get().getWorkerType()!= WorkerType.WAITER) {return null;}
     //table and waiter exists, assign them and save
     tableFetched.setWaiter(waiterFetchedOptional.get());
     tableRepository.save(tableFetched);

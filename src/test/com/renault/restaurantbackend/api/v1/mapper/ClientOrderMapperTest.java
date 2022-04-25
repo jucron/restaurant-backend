@@ -2,8 +2,7 @@ package com.renault.restaurantbackend.api.v1.mapper;
 
 import com.renault.restaurantbackend.api.v1.model.ClientOrderDTO;
 import com.renault.restaurantbackend.domain.ClientOrder;
-import com.renault.restaurantbackend.domain.Cook;
-import com.renault.restaurantbackend.domain.Waiter;
+import com.renault.restaurantbackend.domain.Worker;
 import com.renault.restaurantbackend.domain.enums.Status;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +18,7 @@ class ClientOrderMapperTest {
     //given
     ClientOrder order = new ClientOrder(); order.setId(1L);
     order.setStatus(Status.OPEN);
-    order.setCook(new Cook()); order.setWaiter(new Waiter());
+    order.setCook(new Worker()); order.setWaiter(new Worker());
 
     //when
     ClientOrderDTO orderDTO = clientOrderMapper.orderToOrderDTO(order);

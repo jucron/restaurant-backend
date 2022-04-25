@@ -8,5 +8,5 @@ public class ClientTableDTO {
 
   private int number;
   private Status status;
-  private WaiterDTO waiterDTO;
+  private WorkerDTO waiterDTO;
 }

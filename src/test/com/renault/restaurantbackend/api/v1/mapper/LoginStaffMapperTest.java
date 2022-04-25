@@ -17,12 +17,11 @@ class LoginStaffMapperTest {
     long id = 1L;
     WorkerType workerType = WorkerType.COOK;
     LoginStaff login = new LoginStaff(); login.setUsername(username);
-    login.setId(id);login.setPassword(password); login.setWorkerType(workerType);
+    login.setId(id);login.setPassword(password);
     //when
     LoginStaffDTO loginDTO = loginStaffMapper.LoginToLoginDTO(login);
     //then
     assertEquals(id,loginDTO.getId());
     assertEquals(username,loginDTO.getUsername());
-    assertEquals(workerType,loginDTO.getWorkerType());
   }
 }

@@ -1,7 +1,7 @@
 package com.renault.restaurantbackend.controllers;
 
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
-import com.renault.restaurantbackend.api.v1.model.WaiterDTO;
+import com.renault.restaurantbackend.api.v1.model.WorkerDTO;
 import com.renault.restaurantbackend.api.v1.model.lists.ClientTableListDTO;
 import com.renault.restaurantbackend.domain.enums.Status;
 import com.renault.restaurantbackend.services.TableService;
@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static com.renault.restaurantbackend.domain.enums.WorkerType.WAITER;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
@@ -82,7 +83,7 @@ class TableControllerTest {
   @Test
   void assignAWaiterToATable_returnsDTO() throws Exception {
     //given
-    WaiterDTO waiterDTO = new WaiterDTO();waiterDTO.setId(WAITER_ID);
+    WorkerDTO waiterDTO = new WorkerDTO();waiterDTO.setId(WAITER_ID);waiterDTO.setWorkerType(WAITER);
     ClientTableDTO tableDTO = new ClientTableDTO(); tableDTO.setWaiterDTO(waiterDTO);
     given(tableService.assignWaiterToTable(TABLE_NUMBER,WAITER_ID)).willReturn(tableDTO);
     //when and then
@@ -90,6 +91,7 @@ class TableControllerTest {
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.waiterDTO.id", equalTo((int)WAITER_ID)));
+        .andExpect(jsonPath("$.waiterDTO.id", equalTo((int)WAITER_ID)))
+        .andExpect(jsonPath("$.waiterDTO.workerType", equalTo(WAITER.toString())));
   }
 }

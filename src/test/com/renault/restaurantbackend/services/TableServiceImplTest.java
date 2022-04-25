@@ -4,9 +4,9 @@ import com.renault.restaurantbackend.api.v1.mapper.ClientTableMapper;
 import com.renault.restaurantbackend.api.v1.model.ClientTableDTO;
 import com.renault.restaurantbackend.api.v1.model.lists.ClientTableListDTO;
 import com.renault.restaurantbackend.domain.ClientTable;
-import com.renault.restaurantbackend.domain.Waiter;
+import com.renault.restaurantbackend.domain.Worker;
 import com.renault.restaurantbackend.repositories.ClientTableRepository;
-import com.renault.restaurantbackend.repositories.WaiterRepository;
+import com.renault.restaurantbackend.repositories.WorkerRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static com.renault.restaurantbackend.domain.enums.Status.CLOSED;
+import static com.renault.restaurantbackend.domain.enums.WorkerType.WAITER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,7 +33,7 @@ class TableServiceImplTest {
   @Mock
   private ClientTableRepository tableRepository;
   @Mock
-  private WaiterRepository waiterRepository;
+  private WorkerRepository workerRepository;
 
   @Captor
   private ArgumentCaptor<ClientTable> tableArgumentCaptor;
@@ -40,7 +41,7 @@ class TableServiceImplTest {
   @BeforeEach
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    tableService = new TableServiceImpl(tableRepository,tableMapper, waiterRepository);
+    tableService = new TableServiceImpl(tableRepository,tableMapper, workerRepository);
   }
 
   @Test
@@ -95,10 +96,10 @@ class TableServiceImplTest {
   void assignWaiterToATableByGivingTableNumberWaiterId_returnsTableDTO() {
     //given
     int tableNumber = 1; ClientTable table = new ClientTable(); table.setNumber(tableNumber);
-    long waiterId = 10L; Waiter waiter = new Waiter(); waiter.setId(waiterId);
+    long waiterId = 10L; Worker waiter = new Worker(); waiter.setId(waiterId); waiter.setWorkerType(WAITER);
 
     given(tableRepository.findByNumber(tableNumber)).willReturn(table);
-    given(waiterRepository.findById(waiterId)).willReturn(Optional.of(waiter));
+    given(workerRepository.findById(waiterId)).willReturn(Optional.of(waiter));
     given(tableMapper.clientTableToClientTableDTO(any())).willReturn(new ClientTableDTO());
     //when
     ClientTableDTO tableDTO = tableService.assignWaiterToTable(tableNumber,waiterId);
@@ -108,6 +109,7 @@ class TableServiceImplTest {
 
     ClientTable tableCaptured = tableArgumentCaptor.getValue();
     assertEquals(waiterId,tableCaptured.getWaiter().getId());
+    assertEquals(WAITER,tableCaptured.getWaiter().getWorkerType());
     assertEquals(tableNumber,tableCaptured.getNumber());
   }
 }
